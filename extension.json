@@ -15,6 +15,9 @@
 	"MessagesDirs": {
 		"ReligiowikiCustomizer": [ "i18n" ]
 	},
+	"MagicWordFiles": {
+		"en": "i18n/magic/ReligiowikiCustomizer.magic.php"
+	},
 	"SpecialPages": {
 		"ReligiowikiCustomizer": {
 			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\SpecialPages\\SpecialReligiowikiCustomizer"
