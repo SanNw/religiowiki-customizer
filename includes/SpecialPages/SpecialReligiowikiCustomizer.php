@@ -2,28 +2,38 @@
 
 namespace MediaWiki\Extension\ReligiowikiCustomizer\SpecialPages;
 
-use FormSpecialPage;
 use HTMLForm;
+use ManualLogEntry;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\CustomCodeStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\ThemeSettingsStore;
+use SpecialPage;
 use Status;
 
 /**
- * Special:ReligiowikiCustomizer — aba "Aparência" da Fase 1: formulário pra
- * configurar cores, tipografia e largura máxima do tema.
+ * Special:ReligiowikiCustomizer — três abas:
+ *   ?tab=aparencia (Fase 1) — cores, tipografia, largura máxima.
+ *   ?tab=css       (Fase 2) — CSS personalizado.
+ *   ?tab=js        (Fase 2) — JS personalizado.
  *
- * Restrita ao direito nativo `editinterface` (grupo sysop por padrão) via
- * o segundo parâmetro do construtor de FormSpecialPage — SpecialPage::execute()
- * chama checkPermissions() sozinho antes de renderizar, então não há como
- * chegar no formulário sem esse direito. CSRF é o token padrão do
- * HTMLForm/FormSpecialPage, também automático.
+ * Cada aba é um HTMLForm independente (token CSRF próprio, automático).
+ * Não usa mais FormSpecialPage (adequado só pra um formulário) porque agora
+ * há três, cada um com seu próprio submit — ver README da extensão.
+ *
+ * Permissão: restrita ao direito nativo `editinterface` (grupo sysop por
+ * padrão) via SpecialPage::__construct(); SpecialPage::execute() chama
+ * checkPermissions() antes de qualquer coisa renderizar.
  */
-class SpecialReligiowikiCustomizer extends FormSpecialPage {
+class SpecialReligiowikiCustomizer extends SpecialPage {
 
-	private ThemeSettingsStore $store;
+	private const TABS = [ 'aparencia', 'css', 'js' ];
+
+	private ThemeSettingsStore $themeStore;
+	private CustomCodeStore $codeStore;
 
 	public function __construct() {
 		parent::__construct( 'ReligiowikiCustomizer', 'editinterface' );
-		$this->store = ThemeSettingsStore::newFromGlobalState();
+		$this->themeStore = ThemeSettingsStore::newFromGlobalState();
+		$this->codeStore = CustomCodeStore::newFromGlobalState();
 	}
 
 	/** @inheritDoc */
@@ -41,16 +51,59 @@ class SpecialReligiowikiCustomizer extends FormSpecialPage {
 		return $this->msg( 'religiowikicustomizer-title' )->text();
 	}
 
-	/**
-	 * Campos como texto validado (não HTMLColorField — não existe como tipo
-	 * nativo estável do HTMLForm no core; um widget de color-picker de
-	 * verdade fica como refinamento de UI pra depois, sem bloquear a Fase 1
-	 * funcionar corretamente).
-	 *
-	 * @inheritDoc
-	 */
-	protected function getFormFields() {
-		$current = $this->store->getTheme();
+	/** @inheritDoc */
+	public function execute( $subPage ) {
+		$this->setHeaders();
+		$this->checkPermissions();
+
+		$out = $this->getOutput();
+		$out->addModuleStyles( 'ext.religiowikiCustomizer.special' );
+		$out->addModules( 'ext.religiowikiCustomizer.special' );
+
+		$tab = $this->getRequest()->getRawVal( 'tab', 'aparencia' );
+		if ( !in_array( $tab, self::TABS, true ) ) {
+			$tab = 'aparencia';
+		}
+
+		$out->addHTML( $this->buildTabNav( $tab ) );
+
+		switch ( $tab ) {
+			case 'css':
+				$this->showCssForm();
+				break;
+			case 'js':
+				$this->showJsForm();
+				break;
+			default:
+				$this->showThemeForm();
+		}
+	}
+
+	private function buildTabNav( string $activeTab ): string {
+		$pageTitle = $this->getPageTitle();
+		$links = [];
+		$labels = [
+			'aparencia' => 'religiowikicustomizer-tab-aparencia',
+			'css' => 'religiowikicustomizer-tab-css',
+			'js' => 'religiowikicustomizer-tab-js',
+		];
+		foreach ( $labels as $tab => $msgKey ) {
+			$class = $tab === $activeTab ? 'religiowikicustomizer-tab religiowikicustomizer-tab-active'
+				: 'religiowikicustomizer-tab';
+			$links[] = $this->getLinkRenderer()->makeLink(
+				$pageTitle,
+				$this->msg( $msgKey )->text(),
+				[ 'class' => $class ],
+				[ 'tab' => $tab ]
+			);
+		}
+		return '<div class="religiowikicustomizer-tabs">' . implode( '', $links ) . '</div>';
+	}
+
+	// ---------- Aba Aparência (Fase 1) ----------
+
+	private function showThemeForm(): void {
+		$current = $this->themeStore->getTheme();
 		$colorFields = [
 			'primary' => 'religiowikicustomizer-field-primary',
 			'secondary' => 'religiowikicustomizer-field-secondary',
@@ -69,9 +122,9 @@ class SpecialReligiowikiCustomizer extends FormSpecialPage {
 				'default' => $current[ $key ],
 				'validation-callback' => [ self::class, 'validateColor' ],
 				'help-message' => 'religiowikicustomizer-help-colorformat',
+				'cssclass' => 'religiowikicustomizer-color-input',
 			];
 		}
-
 		$fields['fontFamily'] = [
 			'type' => 'text',
 			'label-message' => 'religiowikicustomizer-field-fontfamily',
@@ -88,7 +141,40 @@ class SpecialReligiowikiCustomizer extends FormSpecialPage {
 			'default' => $current['maxWidth'],
 		];
 
-		return $fields;
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-theme' );
+		$form->addHiddenField( 'tab', 'aparencia' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
+		$form->addButton( [
+			'name' => 'wpReligiowikiCustomizerReset',
+			'value' => '1',
+			'label-message' => 'religiowikicustomizer-reset',
+			'flags' => [ 'destructive' ],
+		] );
+		$form->setSubmitCallback( [ $this, 'onSubmitTheme' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+		}
+	}
+
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitTheme( array $data ) {
+		$actorId = $this->getUser()->getActorId();
+
+		if ( $this->getRequest()->getCheck( 'wpReligiowikiCustomizerReset' ) ) {
+			$this->themeStore->resetTheme();
+			$this->logChange( 'resettheme' );
+			return Status::newGood();
+		}
+
+		$this->themeStore->saveTheme( $data, $actorId );
+		$this->logChange( 'savetheme' );
+		return Status::newGood();
 	}
 
 	/**
@@ -102,33 +188,109 @@ class SpecialReligiowikiCustomizer extends FormSpecialPage {
 		return wfMessage( 'religiowikicustomizer-error-invalidcolor' )->text();
 	}
 
-	/** @inheritDoc */
-	protected function alterForm( HTMLForm $form ) {
-		$form->setId( 'religiowikicustomizer-form' );
+	// ---------- Aba CSS personalizado (Fase 2) ----------
+
+	private function showCssForm(): void {
+		$fields = [
+			'customCss' => [
+				'type' => 'textarea',
+				'label-message' => 'religiowikicustomizer-field-customcss',
+				'default' => $this->codeStore->getCustomCss(),
+				'rows' => 20,
+				'cssclass' => 'religiowikicustomizer-code-editor',
+				'id' => 'religiowikicustomizer-customcss-textarea',
+			],
+		];
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-css' );
+		$form->addHiddenField( 'tab', 'css' );
 		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
 		$form->addButton( [
-			'name' => 'wpReligiowikiCustomizerReset',
+			'name' => 'religiowikicustomizer-preview-css',
 			'value' => '1',
-			'label-message' => 'religiowikicustomizer-reset',
-			'flags' => [ 'destructive' ],
+			'label-message' => 'religiowikicustomizer-preview',
+			'id' => 'religiowikicustomizer-preview-css-btn',
 		] );
-		$form->addHiddenField( 'title', $this->getPageTitle()->getPrefixedDBkey() );
-	}
+		$form->addPreText( $this->msg( 'religiowikicustomizer-css-help' )->parseAsBlock() );
+		$form->setSubmitCallback( [ $this, 'onSubmitCss' ] );
 
-	/** @inheritDoc */
-	public function onSubmit( array $data ) {
-		if ( $this->getRequest()->getCheck( 'wpReligiowikiCustomizerReset' ) ) {
-			$this->store->resetTheme();
-			return Status::newGood( 'reset' );
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
-
-		$actorId = $this->getUser()->getActorId();
-		$this->store->saveTheme( $data, $actorId );
-		return Status::newGood( 'saved' );
 	}
 
-	/** @inheritDoc */
-	public function onSuccess() {
-		$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitCss( array $data ) {
+		$this->codeStore->saveCustomCss( (string)$data['customCss'], $this->getUser()->getActorId() );
+		$this->logChange( 'savecss' );
+		return Status::newGood();
+	}
+
+	// ---------- Aba JS personalizado (Fase 2) ----------
+
+	private function showJsForm(): void {
+		$fields = [
+			'customJs' => [
+				'type' => 'textarea',
+				'label-message' => 'religiowikicustomizer-field-customjs',
+				'default' => $this->codeStore->getCustomJs(),
+				'rows' => 20,
+				'cssclass' => 'religiowikicustomizer-code-editor',
+				'id' => 'religiowikicustomizer-customjs-textarea',
+			],
+		];
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-js' );
+		$form->addHiddenField( 'tab', 'js' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
+		$form->addButton( [
+			'name' => 'religiowikicustomizer-preview-js',
+			'value' => '1',
+			'label-message' => 'religiowikicustomizer-preview',
+			'id' => 'religiowikicustomizer-preview-js-btn',
+		] );
+		// Aviso obrigatório — declarado explicitamente pra quem for usar a
+		// página, não só nos comentários do código (decisão de arquitetura
+		// 3 da Fase 2).
+		$form->addPreText(
+			'<div class="religiowikicustomizer-js-warning">' .
+			$this->msg( 'religiowikicustomizer-js-warning' )->parse() .
+			'</div>'
+		);
+		$form->setSubmitCallback( [ $this, 'onSubmitJs' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+		}
+	}
+
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitJs( array $data ) {
+		$this->codeStore->saveCustomJs( (string)$data['customJs'], $this->getUser()->getActorId() );
+		$this->logChange( 'savejs' );
+		return Status::newGood();
+	}
+
+	/**
+	 * Registra a alteração no log de administração nativo do MediaWiki
+	 * (Special:Log/religiowikicustomizer) — autor e timestamp ficam
+	 * gravados automaticamente pela própria tabela `logging` do core.
+	 */
+	private function logChange( string $action ): void {
+		$logEntry = new ManualLogEntry( 'religiowikicustomizer', $action );
+		$logEntry->setPerformer( $this->getUser() );
+		$logEntry->setTarget( $this->getPageTitle() );
+		$logId = $logEntry->insert();
+		$logEntry->publish( $logId );
 	}
 }

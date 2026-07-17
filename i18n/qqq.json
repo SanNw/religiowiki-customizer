@@ -19,5 +19,19 @@
 	"religiowikicustomizer-save": "{{identical|Save}}",
 	"religiowikicustomizer-reset": "Label of the button that deletes saved settings, falling back to the extension's built-in defaults.",
 	"religiowikicustomizer-saved": "Success message shown after saving the form.",
-	"religiowikicustomizer-error-invalidcolor": "Validation error shown when a color field isn't a valid hex color."
+	"religiowikicustomizer-error-invalidcolor": "Validation error shown when a color field isn't a valid hex color.",
+	"religiowikicustomizer-tab-aparencia": "Tab label for the Fase 1 theme (colors/typography/width) form.",
+	"religiowikicustomizer-tab-css": "Tab label for the Fase 2 custom CSS editor.",
+	"religiowikicustomizer-tab-js": "Tab label for the Fase 2 custom JavaScript editor.",
+	"religiowikicustomizer-field-customcss": "Label for the custom CSS textarea.",
+	"religiowikicustomizer-field-customjs": "Label for the custom JavaScript textarea.",
+	"religiowikicustomizer-preview": "Label of the button that applies the current (unsaved) textarea content locally, in the admin's own browser only.",
+	"religiowikicustomizer-css-help": "Explanatory text shown above the custom CSS textarea.",
+	"religiowikicustomizer-js-warning": "Mandatory security warning shown above the custom JavaScript textarea. Parsed as wikitext ('''bold''' supported).",
+	"log-name-religiowikicustomizer": "Name of this extension's log type, shown in the Special:Log type selector.",
+	"log-description-religiowikicustomizer": "Description shown at the top of Special:Log/religiowikicustomizer.",
+	"logentry-religiowikicustomizer-savetheme": "Log entry shown when an admin saves the theme (colors/typography/width) form. $1 is the performer's user link (via {{msg-mw|Logentry-religiowikicustomizer-savetheme}} formatting conventions, same as other log types).",
+	"logentry-religiowikicustomizer-resettheme": "Log entry shown when an admin clicks \"Restore defaults\" on the theme form. $1 is the performer's user link.",
+	"logentry-religiowikicustomizer-savecss": "Log entry shown when an admin saves the custom CSS textarea. $1 is the performer's user link.",
+	"logentry-religiowikicustomizer-savejs": "Log entry shown when an admin saves the custom JavaScript textarea. $1 is the performer's user link."
 }

@@ -34,10 +34,21 @@
 			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Theme\\ThemeResourceLoaderModule",
 			"targets": [ "desktop", "mobile" ]
 		},
+		"ext.religiowikiCustomizer.customCss": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Theme\\CustomCssResourceLoaderModule",
+			"targets": [ "desktop", "mobile" ]
+		},
+		"ext.religiowikiCustomizer.customJs": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Theme\\CustomJsResourceLoaderModule",
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.religiowikiCustomizer.special": {
-			"styles": [ "resources/css/special-religiowikicustomizer.css" ]
+			"styles": [ "resources/css/special-religiowikicustomizer.css" ],
+			"scripts": [ "resources/js/special-religiowikicustomizer.js" ],
+			"targets": [ "desktop", "mobile" ]
 		}
 	},
+	"LogTypes": [ "religiowikicustomizer" ],
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
 		"remoteExtPath": "ReligiowikiCustomizer"

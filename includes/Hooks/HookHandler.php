@@ -8,14 +8,21 @@ use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
 class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHook {
 
 	/**
-	 * Adiciona o módulo de tema em toda página — é assim que as variáveis
-	 * CSS geradas a partir da configuração salva chegam ao navegador, sem
-	 * tocar em MediaWiki:Common.css.
+	 * Adiciona os módulos de tema e de CSS/JS personalizado em toda página
+	 * — é assim que a configuração salva chega ao navegador, sem tocar em
+	 * MediaWiki:Common.css/Common.js. Ordem de carregamento do CSS é
+	 * garantida por getDependencies() em CustomCssResourceLoaderModule
+	 * (personalizado sempre depois do tema base), não pela ordem das
+	 * chamadas abaixo.
 	 *
 	 * @inheritDoc
 	 */
 	public function onBeforePageDisplay( $out, $skin ): void {
-		$out->addModuleStyles( 'ext.religiowikiCustomizer.theme' );
+		$out->addModuleStyles( [
+			'ext.religiowikiCustomizer.theme',
+			'ext.religiowikiCustomizer.customCss',
+		] );
+		$out->addModules( 'ext.religiowikiCustomizer.customJs' );
 	}
 
 	/**

@@ -19,5 +19,19 @@
 	"religiowikicustomizer-save": "Salvar",
 	"religiowikicustomizer-reset": "Restaurar padrão",
 	"religiowikicustomizer-saved": "Configuração de tema salva. Pode levar um instante pra aparecer — recarregue a página se precisar.",
-	"religiowikicustomizer-error-invalidcolor": "Informe uma cor hexadecimal válida (ex.: #FBF3E1)."
+	"religiowikicustomizer-error-invalidcolor": "Informe uma cor hexadecimal válida (ex.: #FBF3E1).",
+	"religiowikicustomizer-tab-aparencia": "Aparência",
+	"religiowikicustomizer-tab-css": "CSS personalizado",
+	"religiowikicustomizer-tab-js": "JavaScript personalizado",
+	"religiowikicustomizer-field-customcss": "CSS personalizado",
+	"religiowikicustomizer-field-customjs": "JavaScript personalizado",
+	"religiowikicustomizer-preview": "Visualizar alterações",
+	"religiowikicustomizer-css-help": "Aplica depois de cada carregamento de página, logo após o tema base — use isso pra sobrescrever ou complementar. \"Visualizar alterações\" aplica na hora, só no seu próprio navegador, sem salvar.",
+	"religiowikicustomizer-js-warning": "'''Atenção:''' o JavaScript aqui roda para todos os visitantes do site, em toda página, assim que for salvo. Apenas administradores confiáveis devem ter acesso a esta página.",
+	"log-name-religiowikicustomizer": "Registro de personalização da Religio Wiki",
+	"log-description-religiowikicustomizer": "Este é um registro das alterações feitas através de Special:ReligiowikiCustomizer.",
+	"logentry-religiowikicustomizer-savetheme": "$1 atualizou a configuração de tema",
+	"logentry-religiowikicustomizer-resettheme": "$1 restaurou a configuração de tema para o padrão",
+	"logentry-religiowikicustomizer-savecss": "$1 atualizou o CSS personalizado",
+	"logentry-religiowikicustomizer-savejs": "$1 atualizou o JavaScript personalizado"
 }

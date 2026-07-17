@@ -7,11 +7,19 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fase 1 concluída
+## Status: Fases 1 e 2 concluídas
 
-Fundação: estrutura da extensão, tabela de configuração, geração de CSS a
-partir de tokens salvos no banco, e `Special:ReligiowikiCustomizer` com um
-formulário para cores/tipografia/largura máxima.
+**Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
+geração de CSS a partir de tokens salvos no banco, e
+`Special:ReligiowikiCustomizer` com um formulário para cores/tipografia/
+largura máxima.
+
+**Fase 2** — Editor de CSS/JS personalizado: duas abas novas em
+`Special:ReligiowikiCustomizer` (`?tab=css` e `?tab=js`), cada uma com
+textarea, botão "Salvar" e botão "Visualizar alterações" (aplica local, só
+no navegador de quem está editando, sem afetar outros visitantes até
+salvar de fato). Toda gravação (tema, CSS ou JS) fica registrada em
+`Special:Log/religiowikicustomizer` com autor e timestamp.
 
 ### Como funciona
 
@@ -32,6 +40,15 @@ formulário para cores/tipografia/largura máxima.
   salva (`getDefinitionSummary`), então qualquer alteração feita no painel
   invalida o cache do navegador sozinha — não precisa de `purgeCache`
   manual.
+- CSS/JS personalizado (Fase 2) usa a mesma tabela (`custom_css`/
+  `custom_js`) e o mesmo mecanismo de módulo dinâmico. O CSS personalizado
+  declara `ext.religiowikiCustomizer.theme` como dependência, garantindo
+  que carrega **depois** do tema base (cascata previsível, sobrescreve o
+  que precisar). O JS personalizado é executado **sem sanitização de
+  conteúdo** — a mitigação é só controle de acesso (`editinterface`), risco
+  equivalente ao que `MediaWiki:Common.js` já representa hoje; isso é
+  intencional e está documentado no código e na própria página do
+  formulário, não é um descuido.
 
 ### Instalação
 
