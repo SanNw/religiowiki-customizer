@@ -373,6 +373,33 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 						'default' => $block['categoriesJson'],
 					];
 					break;
+				case 'noticias':
+					$fields['noticias_itemsJson'] = [
+						'type' => 'textarea',
+						'rows' => 6,
+						'label-message' => 'religiowikicustomizer-homepage-noticias-items',
+						'help-message' => 'religiowikicustomizer-homepage-noticias-help',
+						'default' => $block['itemsJson'],
+					];
+					break;
+				case 'livros':
+					$fields['livros_itemsJson'] = [
+						'type' => 'textarea',
+						'rows' => 6,
+						'label-message' => 'religiowikicustomizer-homepage-livros-items',
+						'help-message' => 'religiowikicustomizer-homepage-livros-help',
+						'default' => $block['itemsJson'],
+					];
+					break;
+				case 'estatisticas':
+					$fields['estatisticas_itemsJson'] = [
+						'type' => 'textarea',
+						'rows' => 4,
+						'label-message' => 'religiowikicustomizer-homepage-estatisticas-items',
+						'help-message' => 'religiowikicustomizer-homepage-estatisticas-help',
+						'default' => $block['itemsJson'],
+					];
+					break;
 			}
 		}
 

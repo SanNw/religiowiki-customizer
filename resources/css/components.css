@@ -1,0 +1,184 @@
+/*
+ * Biblioteca de componentes (Fase 4) — Card, Alerta, Accordion, Tabs,
+ * Quote, Badge, Callout, Grid. Todos usam os tokens --rw-* do tema
+ * (Fase 1), consistentes com o resto do wiki.
+ */
+
+/* ---------- Card ---------- */
+.rwc-card {
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 6px;
+	padding: 1em;
+	margin: 0.5em 0;
+}
+
+.rwc-card-icon {
+	font-size: 1.5em;
+	display: block;
+	margin-bottom: 0.3em;
+}
+
+.rwc-card-title {
+	margin: 0 0 0.3em;
+}
+
+.rwc-card-link {
+	display: inline-block;
+	margin-top: 0.5em;
+	color: var( --rw-primary, #92400E );
+}
+
+/* ---------- Alerta ---------- */
+.rwc-alert {
+	display: flex;
+	gap: 0.6em;
+	align-items: flex-start;
+	border-radius: 6px;
+	padding: 0.8em 1em;
+	margin: 0.8em 0;
+	border: 1px solid var( --rw-border, #E2D5B8 );
+}
+
+.rwc-alert-info { background: #eaf2fb; border-color: #a9c9ec; }
+.rwc-alert-aviso { background: #fef6e7; border-color: #e0a868; }
+.rwc-alert-erro { background: #fbeaea; border-color: #dc9a9a; }
+.rwc-alert-sucesso { background: #e9f7ee; border-color: #9ad0ae; }
+
+.rwc-alert-icon {
+	flex: 0 0 auto;
+}
+
+.rwc-alert-body > :first-child {
+	margin-top: 0;
+}
+.rwc-alert-body > :last-child {
+	margin-bottom: 0;
+}
+
+/* ---------- Accordion ---------- */
+.rwc-accordion {
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 6px;
+	margin: 0.5em 0;
+	overflow: hidden;
+}
+
+.rwc-accordion-toggle {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: var( --rw-surface, #FFFDF7 );
+	border: none;
+	padding: 0.7em 1em;
+	cursor: pointer;
+	font: inherit;
+	text-align: left;
+}
+
+.rwc-accordion-chevron {
+	transition: transform 0.15s ease;
+}
+
+.rwc-accordion-toggle[aria-expanded="true"] .rwc-accordion-chevron {
+	transform: rotate( 180deg );
+}
+
+.rwc-accordion-body {
+	padding: 0.8em 1em;
+	display: none;
+}
+
+.rwc-accordion-body.rwc-open {
+	display: block;
+}
+
+/* ---------- Tabs ---------- */
+.rwc-tabs-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	border-bottom: 1px solid var( --rw-border, #E2D5B8 );
+	margin-bottom: 1em;
+}
+
+.rwc-tabs-tab {
+	background: none;
+	border: 1px solid transparent;
+	border-bottom: none;
+	padding: 0.5em 1em;
+	cursor: pointer;
+	font: inherit;
+	border-radius: 4px 4px 0 0;
+}
+
+.rwc-tabs-tab-active {
+	border-color: var( --rw-border, #E2D5B8 );
+	background: var( --rw-surface, #FFFDF7 );
+	font-weight: bold;
+}
+
+.rwc-tabs-panel {
+	display: none;
+}
+
+.rwc-tabs-panel-active {
+	display: block;
+}
+
+/* ---------- Quote ---------- */
+.rwc-quote {
+	border-left: 4px solid var( --rw-primary, #92400E );
+	margin: 1em 0;
+	padding: 0.4em 1em;
+	font-style: italic;
+}
+
+.rwc-quote-footer {
+	margin-top: 0.5em;
+	font-style: normal;
+	color: var( --rw-text-muted, #5C5142 );
+}
+
+/* ---------- Badge ---------- */
+.rwc-badge {
+	display: inline-block;
+	padding: 0.15em 0.6em;
+	border-radius: 999px;
+	font-size: 0.85em;
+	font-weight: bold;
+}
+
+.rwc-badge-cinza { background: #e2e2e2; color: #333; }
+.rwc-badge-verde { background: #dff3e6; color: #15803D; }
+.rwc-badge-vermelho { background: #fbe3e3; color: #DC2626; }
+.rwc-badge-azul { background: #e2edfb; color: #1d4ed8; }
+.rwc-badge-amarelo { background: #fdf3d0; color: #92400E; }
+
+/* ---------- Callout ---------- */
+.rwc-callout {
+	background: var( --rw-surface, #FFFDF7 );
+	border-left: 4px solid var( --rw-border, #E2D5B8 );
+	padding: 0.8em 1em;
+	margin: 0.8em 0;
+}
+
+.rwc-callout-title {
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+
+/* ---------- Grid ---------- */
+.rwc-grid {
+	display: grid;
+	grid-template-columns: repeat( var( --rwc-grid-columns, 2 ), 1fr );
+	gap: 1em;
+	margin: 1em 0;
+}
+
+@media ( max-width: 600px ) {
+	.rwc-grid {
+		grid-template-columns: 1fr;
+	}
+}

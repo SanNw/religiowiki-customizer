@@ -36,23 +36,41 @@
 	text-decoration: none;
 }
 
+/*
+ * Cards/Notícias/Livros usam CardComponent::buildHtml (Fase 4) — o card em
+ * si (.rwc-card) já é estilizado em components.css; aqui só o container em
+ * grid.
+ */
 .religiowikicustomizer-cards {
 	display: grid;
 	grid-template-columns: repeat( auto-fit, minmax( 220px, 1fr ) );
 	gap: 1em;
 }
 
-.religiowikicustomizer-card {
+.religiowikicustomizer-stats {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax( 140px, 1fr ) );
+	gap: 1em;
+	text-align: center;
+}
+
+.religiowikicustomizer-stat {
 	background: var( --rw-surface, #FFFDF7 );
 	border: 1px solid var( --rw-border, #E2D5B8 );
 	border-radius: 6px;
 	padding: 1em;
 }
 
-.religiowikicustomizer-card-icon {
-	font-size: 1.5em;
+.religiowikicustomizer-stat-value {
 	display: block;
-	margin-bottom: 0.3em;
+	font-size: 2em;
+	font-weight: bold;
+	color: var( --rw-primary, #92400E );
+}
+
+.religiowikicustomizer-stat-label {
+	display: block;
+	color: var( --rw-text-muted, #5C5142 );
 }
 
 .religiowikicustomizer-featured,

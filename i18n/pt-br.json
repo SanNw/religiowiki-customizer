@@ -54,5 +54,16 @@
 	"religiowikicustomizer-homepage-categories-help": "Array JSON com nomes de categoria (sem o prefixo \"Category:\"), ex.: <code>[\"Cristianismo\"]</code>.",
 	"religiowikicustomizer-homepage-search-enabled": "Habilitar bloco de Pesquisa",
 	"religiowikicustomizer-card-readmore": "Continue lendo →",
-	"religiowikicustomizer-search-placeholder": "Pesquisar na Religio Wiki…"
+	"religiowikicustomizer-search-placeholder": "Pesquisar na Religio Wiki…",
+	"religiowikicustomizer-homepage-noticias-enabled": "Habilitar bloco de Notícias",
+	"religiowikicustomizer-homepage-noticias-items": "Notícias: itens (JSON)",
+	"religiowikicustomizer-homepage-noticias-help": "Array JSON, ex.: <code>[{\"title\":\"...\",\"text\":\"...\",\"link\":\"...\",\"date\":\"2026-07-17\"}]</code>. Renderizado como cards (reaproveita o componente Card).",
+	"religiowikicustomizer-homepage-livros-enabled": "Habilitar bloco de Livros",
+	"religiowikicustomizer-homepage-livros-items": "Livros: itens (JSON)",
+	"religiowikicustomizer-homepage-livros-help": "Array JSON, ex.: <code>[{\"title\":\"...\",\"author\":\"...\",\"link\":\"...\",\"icon\":\"📖\"}]</code>. Renderizado como cards (reaproveita o componente Card).",
+	"religiowikicustomizer-homepage-estatisticas-enabled": "Habilitar bloco de Estatísticas",
+	"religiowikicustomizer-homepage-estatisticas-items": "Estatísticas: itens (JSON)",
+	"religiowikicustomizer-homepage-estatisticas-help": "Array JSON, ex.: <code>[{\"label\":\"Artigos\",\"value\":\"120\"}]</code>.",
+	"religiowikicustomizer-accordion-defaulttitle": "Detalhes",
+	"religiowikicustomizer-tabs-defaultlabel": "Aba $1"
 }

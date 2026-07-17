@@ -2,21 +2,34 @@
 
 namespace MediaWiki\Extension\ReligiowikiCustomizer\Hooks;
 
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\AccordionComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\AlertComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\BadgeComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\CalloutComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\CardComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\GridComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\QuoteComponent;
+use MediaWiki\Extension\ReligiowikiCustomizer\Components\TabsComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Homepage\HomepageRenderer;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageBeforeHTMLHook;
+use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
 
-class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHook, OutputPageBeforeHTMLHook {
+class HookHandler implements
+	BeforePageDisplayHook,
+	LoadExtensionSchemaUpdatesHook,
+	OutputPageBeforeHTMLHook,
+	ParserFirstCallInitHook
+{
 
 	/**
-	 * Adiciona os módulos de tema e de CSS/JS personalizado em toda página
-	 * — é assim que a configuração salva chega ao navegador, sem tocar em
-	 * MediaWiki:Common.css/Common.js. Ordem de carregamento do CSS é
-	 * garantida por getDependencies() em CustomCssResourceLoaderModule
-	 * (personalizado sempre depois do tema base), não pela ordem das
-	 * chamadas abaixo.
+	 * Adiciona os módulos de tema, CSS/JS personalizado e da biblioteca de
+	 * componentes em toda página — os componentes (Fase 4) podem aparecer
+	 * em qualquer artigo, não só na Main Page ou no painel admin. Ordem de
+	 * carregamento do CSS de tema/personalizado é garantida por
+	 * getDependencies() nas classes de módulo, não pela ordem abaixo.
 	 *
 	 * @inheritDoc
 	 */
@@ -24,8 +37,12 @@ class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHo
 		$out->addModuleStyles( [
 			'ext.religiowikiCustomizer.theme',
 			'ext.religiowikiCustomizer.customCss',
+			'ext.religiowikiCustomizer.components',
 		] );
-		$out->addModules( 'ext.religiowikiCustomizer.customJs' );
+		$out->addModules( [
+			'ext.religiowikiCustomizer.customJs',
+			'ext.religiowikiCustomizer.componentsJs',
+		] );
 	}
 
 	/**
@@ -51,6 +68,24 @@ class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHo
 
 		$out->addModuleStyles( 'ext.religiowikiCustomizer.homepage' );
 		$text = HomepageRenderer::render( $blocks );
+	}
+
+	/**
+	 * Registra os parser tags da biblioteca de componentes (Fase 4).
+	 * Qualquer editor do grupo `editor` (não só admin) pode usar isso em
+	 * wikitext — ver escape rigoroso em cada classe de componente.
+	 *
+	 * @inheritDoc
+	 */
+	public function onParserFirstCallInit( $parser ): void {
+		$parser->setHook( 'rwcard', [ CardComponent::class, 'render' ] );
+		$parser->setHook( 'rwalert', [ AlertComponent::class, 'render' ] );
+		$parser->setHook( 'rwaccordion', [ AccordionComponent::class, 'render' ] );
+		$parser->setHook( 'rwtabs', [ TabsComponent::class, 'render' ] );
+		$parser->setHook( 'rwquote', [ QuoteComponent::class, 'render' ] );
+		$parser->setHook( 'rwbadge', [ BadgeComponent::class, 'render' ] );
+		$parser->setHook( 'rwcallout', [ CalloutComponent::class, 'render' ] );
+		$parser->setHook( 'rwgrid', [ GridComponent::class, 'render' ] );
 	}
 
 	/**

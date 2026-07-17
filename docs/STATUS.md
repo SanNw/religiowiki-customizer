@@ -10,8 +10,8 @@ README (instalação/uso) nem o prompt mestre das 8 fases — é só um mapa.
 |---|---|---|
 | 1. Fundação/tema | ✅ Feita | `Special:ReligiowikiCustomizer` (aba Aparência), tabela de config, geração de CSS via ResourceLoader |
 | 2. Editor CSS/JS | ✅ Feita | Abas CSS/JS, preview local, log de auditoria |
-| 3. Homepage Builder | ✅ Feita | Aba Homepage, 5 blocos, substitui a Main Page com fallback |
-| 4. Componentes | ⬜ Não iniciada | `<rwcard>`, `<rwaccordion>` etc. |
+| 3. Homepage Builder | ✅ Feita | Aba Homepage, 8 blocos (5 + Notícias/Livros/Estatísticas da Fase 4), substitui a Main Page com fallback |
+| 4. Componentes | ✅ Feita | 8 parser tags (`<rwcard>`, `<rwalert>`, `<rwaccordion>`, `<rwtabs>`, `<rwquote>`, `<rwbadge>`, `<rwcallout>`, `<rwgrid>`) — ver `docs/COMPONENTS.md` |
 | 5. Widgets semânticos | ⬜ Não iniciada | Infobox, Livro, Autor, Religião... |
 | 6. SEO | ⬜ Não iniciada | Meta tags, sitemap, JSON-LD |
 | 7. Performance/skin | ⬜ Não iniciada | Lazy loading, detecção de skin |
@@ -54,6 +54,16 @@ de escrever mais código em cima.
 - Homepage Builder: reordenar blocos é por campo numérico "ordem", não
   drag-and-drop — decisão deliberada de simplicidade sobre UX.
 - "Artigos em destaque" só suporta escolha manual de páginas nesta versão.
+- `Components\LinkSanitizer` monta um regex a partir de `$wgUrlProtocols`
+  em toda chamada (não cacheado) — funcionalmente correto, mas se algum
+  componente for chamado em volume muito alto numa página só (centenas de
+  `<rwcard link="...">`), vale revisar performance; não é um problema de
+  segurança, só de eficiência potencial.
+- Parser tags (Fase 4) ainda não têm nenhum teste manual de "o que acontece
+  se um editor aninhar `<rwtabs>` dentro de `<rwtabs>`" ou outros casos de
+  aninhamento — `recursiveTagParse` deveria lidar com isso corretamente
+  (é o mecanismo padrão do MediaWiki pra tags aninhadas), mas não foi
+  verificado ao vivo.
 
 ## Mapa de arquivos
 
@@ -72,10 +82,12 @@ includes/
     CustomCssResourceLoaderModule.php              serve o CSS personalizado
     CustomJsResourceLoaderModule.php               serve o JS personalizado
   Homepage/HomepageRenderer.php                    HTML dos blocos da homepage
+  Components/                                      8 parser tags (Fase 4) + LinkSanitizer/SegmentSplitter compartilhados
   SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (4 abas)
 sql/tables.json + sql/mysql/tables-generated.sql   a única tabela (chave-valor genérica)
 resources/                                        CSS/JS servidos ao navegador
 i18n/                                              en.json (fonte), qqq.json (docs), pt-br.json
+docs/COMPONENTS.md                                sintaxe de uso de cada parser tag (pra editores, não só devs)
 ```
 
 Tudo fica em **uma tabela só** (`religiowiki_customizer_settings`,

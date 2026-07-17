@@ -15,7 +15,11 @@ class HomepageConfigStore {
 
 	private const SETTINGS_KEY = 'homepage';
 
-	public const BLOCK_TYPES = [ 'hero', 'cards', 'featured', 'categories', 'search' ];
+	public const BLOCK_TYPES = [
+		'hero', 'cards', 'featured', 'categories', 'search',
+		// Fase 4 — dependiam da biblioteca de componentes (Card/Grid).
+		'noticias', 'livros', 'estatisticas',
+	];
 
 	/**
 	 * @var array<string,array<string,mixed>> Um bloco por tipo, na ordem
@@ -55,6 +59,27 @@ class HomepageConfigStore {
 			'type' => 'search',
 			'enabled' => false,
 			'order' => 5,
+		],
+		'noticias' => [
+			'type' => 'noticias',
+			'enabled' => false,
+			'order' => 6,
+			// cada item: {"title":"...","text":"...","link":"...","date":"..."}
+			'itemsJson' => '[]',
+		],
+		'livros' => [
+			'type' => 'livros',
+			'enabled' => false,
+			'order' => 7,
+			// cada item: {"title":"...","author":"...","link":"...","icon":"📖"}
+			'itemsJson' => '[]',
+		],
+		'estatisticas' => [
+			'type' => 'estatisticas',
+			'enabled' => false,
+			'order' => 8,
+			// cada item: {"label":"...","value":"..."}
+			'itemsJson' => '[]',
 		],
 	];
 

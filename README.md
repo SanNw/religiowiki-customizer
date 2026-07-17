@@ -7,7 +7,7 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1, 2 e 3 concluídas
+## Status: Fases 1, 2, 3 e 4 concluídas
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -32,6 +32,19 @@ fallback pedido pela Fase 3. "Artigos em destaque" nesta versão só suporta
 escolha manual de páginas (modo automático por mais visitadas não
 implementado — precisaria de uma fonte de dados de pageviews que não está
 garantida em toda instalação).
+
+**Fase 4** — Biblioteca de componentes: 8 parser tags disponíveis em
+qualquer página wiki (`<rwcard>`, `<rwalert>`, `<rwaccordion>`, `<rwtabs>`,
+`<rwquote>`, `<rwbadge>`, `<rwcallout>`, `<rwgrid>`) — ver
+[`docs/COMPONENTS.md`](docs/COMPONENTS.md) pra sintaxe de uso de cada um.
+Modelo de ameaça diferente das
+fases anteriores: qualquer editor do grupo `editor` pode usar essas tags,
+não só admin — por isso todo parâmetro passa por escape rigoroso
+(`Html::element`) e links por `Components\LinkSanitizer` (mesma checagem
+de protocolo, `$wgUrlProtocols`, que o wikitext nativo já faz). A Homepage
+Builder ganhou 3 blocos novos que dependiam disso (Notícias, Livros,
+Estatísticas), e o bloco "Cards" existente foi refeito pra reaproveitar
+`CardComponent::buildHtml` em vez de markup duplicado.
 
 ### Como funciona
 

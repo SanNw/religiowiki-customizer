@@ -54,5 +54,16 @@
 	"religiowikicustomizer-homepage-categories-help": "Help text explaining the expected JSON shape for the Categories block.",
 	"religiowikicustomizer-homepage-search-enabled": "Checkbox label to enable/disable the embedded Search box homepage block.",
 	"religiowikicustomizer-card-readmore": "Link text shown at the bottom of a homepage Card, when the card has a link configured.",
-	"religiowikicustomizer-search-placeholder": "Placeholder text of the search input in the homepage's embedded Search block."
+	"religiowikicustomizer-search-placeholder": "Placeholder text of the search input in the homepage's embedded Search block.",
+	"religiowikicustomizer-homepage-noticias-enabled": "Checkbox label to enable/disable the News homepage block (Fase 4).",
+	"religiowikicustomizer-homepage-noticias-items": "Label for the News block's JSON items textarea.",
+	"religiowikicustomizer-homepage-noticias-help": "Help text explaining the expected JSON shape for the News block.",
+	"religiowikicustomizer-homepage-livros-enabled": "Checkbox label to enable/disable the Books homepage block (Fase 4).",
+	"religiowikicustomizer-homepage-livros-items": "Label for the Books block's JSON items textarea.",
+	"religiowikicustomizer-homepage-livros-help": "Help text explaining the expected JSON shape for the Books block.",
+	"religiowikicustomizer-homepage-estatisticas-enabled": "Checkbox label to enable/disable the Statistics homepage block (Fase 4).",
+	"religiowikicustomizer-homepage-estatisticas-items": "Label for the Statistics block's JSON items textarea.",
+	"religiowikicustomizer-homepage-estatisticas-help": "Help text explaining the expected JSON shape for the Statistics block.",
+	"religiowikicustomizer-accordion-defaulttitle": "Fallback label used by <rwaccordion> when the 'titulo' parameter is missing.",
+	"religiowikicustomizer-tabs-defaultlabel": "Fallback label used by <rwtabs> for a segment with no label line. $1 is the tab's 1-based position."
 }
