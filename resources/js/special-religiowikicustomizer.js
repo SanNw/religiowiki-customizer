@@ -32,7 +32,11 @@
 			return;
 		}
 		Object.keys( COLOR_TO_VAR ).forEach( function ( key ) {
-			var input = form.querySelector( '#mw-input-wp' + key );
+			// #mw-input-wp<key> é o <div> wrapper do OOUI, não o <input>
+			// real (mesmo problema do wireCssPreview/wireJsPreview) -- busca
+			// o <input> de verdade dentro do wrapper.
+			var wrapper = form.querySelector( '#mw-input-wp' + key );
+			var input = wrapper ? wrapper.querySelector( 'input' ) : null;
 			if ( !input ) {
 				return;
 			}
@@ -44,7 +48,12 @@
 
 	function wireCssPreview() {
 		var btn = document.getElementById( 'religiowikicustomizer-preview-css-btn' );
-		var textarea = document.getElementById( 'religiowikicustomizer-customcss-textarea' );
+		// No modo de exibição "ooui" do HTMLForm, o 'id' do campo vai pro
+		// <div> wrapper do OOUI, não pro <textarea> real (que recebe um id
+		// autogerado tipo "ooui-php-N") -- por isso busca o <textarea> real
+		// dentro do wrapper, em vez de getElementById direto.
+		var wrapper = document.getElementById( 'religiowikicustomizer-customcss-textarea' );
+		var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
 		if ( !btn || !textarea ) {
 			return;
 		}
@@ -62,7 +71,10 @@
 
 	function wireJsPreview() {
 		var btn = document.getElementById( 'religiowikicustomizer-preview-js-btn' );
-		var textarea = document.getElementById( 'religiowikicustomizer-customjs-textarea' );
+		// Mesmo problema do wireCssPreview: o wrapper OOUI fica com o id, o
+		// <textarea> real tem um id autogerado -- busca dentro do wrapper.
+		var wrapper = document.getElementById( 'religiowikicustomizer-customjs-textarea' );
+		var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
 		if ( !btn || !textarea ) {
 			return;
 		}
