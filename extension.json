@@ -48,6 +48,10 @@
 			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Theme\\CustomJsResourceLoaderModule",
 			"targets": [ "desktop", "mobile" ]
 		},
+		"ext.religiowikiCustomizer.chrome": {
+			"scripts": [ "resources/js/chrome.js" ],
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.religiowikiCustomizer.special": {
 			"styles": [ "resources/css/special-religiowikicustomizer.css" ],
 			"scripts": [ "resources/js/special-religiowikicustomizer.js" ],

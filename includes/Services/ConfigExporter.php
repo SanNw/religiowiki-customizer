@@ -61,7 +61,7 @@ class ConfigExporter {
 	private static function backupCurrent( ?int $actorId ): void {
 		$snapshot = self::exportAll();
 		$lb = MediaWikiServices::getInstance()->getDBLoadBalancer();
-		$dbw = $lb->getConnectionRef( DB_PRIMARY );
+		$dbw = $lb->getConnection( DB_PRIMARY );
 		$dbw->insert(
 			'religiowiki_customizer_settings',
 			[

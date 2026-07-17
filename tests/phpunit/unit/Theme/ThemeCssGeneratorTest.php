@@ -95,11 +95,13 @@ class ThemeCssGeneratorTest extends MediaWikiUnitTestCase {
 			'primary' => '#111} body { display:none} :root{--x:1',
 		] );
 
-		// Só a estrutura legítima (":root {...}", ":root[data-theme=dark]
-		// {...}" e ":root[data-theme=custom] {...}") deve ter chaves — se
-		// um valor injetado sobrevivesse à sanitização, esse count subiria
-		// além dos 3 pares esperados.
-		$this->assertSame( 3, substr_count( $css, '{' ) );
-		$this->assertSame( 3, substr_count( $css, '}' ) );
+		// So a estrutura legitima deve ter chaves: ":root {...}",
+		// ":root[data-theme=dark] {...}", ":root[data-theme=custom] {...}"
+		// (3 pares) + o bloco fixo chromeCss() -- #p-logo/.mw-wiki-logo,
+		// .rw-brand, .rw-brand:hover, .rw-brand .rw-brand-mark (4 pares) = 7.
+		// Se um valor injetado sobrevivesse a sanitizacao, esse count subiria
+		// alem dos 7 pares esperados.
+		$this->assertSame( 7, substr_count( $css, '{' ) );
+		$this->assertSame( 7, substr_count( $css, '}' ) );
 	}
 }

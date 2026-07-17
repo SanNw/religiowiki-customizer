@@ -97,7 +97,7 @@ class HomepageConfigStore {
 	 * @return array<string,array<string,mixed>> Indexado por tipo de bloco.
 	 */
 	public function getConfig(): array {
-		$dbr = $this->loadBalancer->getConnectionRef( DB_REPLICA );
+		$dbr = $this->loadBalancer->getConnection( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_value' ],
@@ -141,7 +141,7 @@ class HomepageConfigStore {
 			}
 		}
 
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->upsert(
 			'religiowiki_customizer_settings',
 			[

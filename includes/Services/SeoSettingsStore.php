@@ -33,7 +33,7 @@ class SeoSettingsStore {
 	 * @return array<string,string>
 	 */
 	public function getSettings(): array {
-		$dbr = $this->loadBalancer->getConnectionRef( DB_REPLICA );
+		$dbr = $this->loadBalancer->getConnection( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_value' ],
@@ -55,7 +55,7 @@ class SeoSettingsStore {
 	 */
 	public function saveSettings( array $values, ?int $actorId ): void {
 		$values = array_intersect_key( $values, self::DEFAULTS ) + self::DEFAULTS;
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->upsert(
 			'religiowiki_customizer_settings',
 			[

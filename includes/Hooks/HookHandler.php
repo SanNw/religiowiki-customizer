@@ -58,6 +58,7 @@ class HookHandler implements
 		$out->addModules( [
 			'ext.religiowikiCustomizer.customJs',
 			'ext.religiowikiCustomizer.componentsJs',
+			'ext.religiowikiCustomizer.chrome',
 		] );
 
 		$out->addBodyClasses( 'rwc-skin-' . $skin->getSkinName() );

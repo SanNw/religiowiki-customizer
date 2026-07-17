@@ -56,7 +56,7 @@ class CustomCodeStore {
 	}
 
 	private function getRaw( string $key ): string {
-		$dbr = $this->loadBalancer->getConnectionRef( DB_REPLICA );
+		$dbr = $this->loadBalancer->getConnection( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_value' ],
@@ -71,7 +71,7 @@ class CustomCodeStore {
 	}
 
 	private function saveRaw( string $key, string $value, ?int $actorId ): void {
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->upsert(
 			'religiowiki_customizer_settings',
 			[

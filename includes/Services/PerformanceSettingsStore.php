@@ -37,7 +37,7 @@ class PerformanceSettingsStore {
 	 * @return array{lazyLoadImages:bool,preloadFontsText:string}
 	 */
 	public function getSettings(): array {
-		$dbr = $this->loadBalancer->getConnectionRef( DB_REPLICA );
+		$dbr = $this->loadBalancer->getConnection( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_value' ],
@@ -64,7 +64,7 @@ class PerformanceSettingsStore {
 			'lazyLoadImages' => !empty( $values['lazyLoadImages'] ),
 			'preloadFontsText' => (string)( $values['preloadFontsText'] ?? '' ),
 		];
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->upsert(
 			'religiowiki_customizer_settings',
 			[

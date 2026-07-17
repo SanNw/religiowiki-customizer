@@ -67,7 +67,55 @@ class ThemeCssGenerator {
 		$css .= "\t--rw-surface: var(--rw-custom-bg-elevated, #FFFDF7);\n";
 		$css .= "}\n";
 
+		$css .= self::chromeCss();
+
 		return $css;
+	}
+
+	/**
+	 * Marca (.rw-brand) e ocultação do logo nativo, sempre presentes -- não
+	 * depende de mediawiki-config/common.css. Este módulo (ext.religiowiki
+	 * Customizer.theme) é o único carregado em TODAS as páginas, incluindo
+	 * Special:Preferências, onde o núcleo do MediaWiki não carrega o módulo
+	 * `site` (Common.css/Common.js) por design -- ver resources/js/chrome.js
+	 * pra quem injeta o elemento .rw-brand nesse caso. Sem isso, Preferências
+	 * mostrava o placeholder cru de $wgLogo (nunca configurado) por baixo do
+	 * #p-logo, que o common.css normalmente esconde.
+	 */
+	private static function chromeCss(): string {
+		return <<<CSS
+
+#p-logo,
+.mw-wiki-logo {
+	display: none;
+}
+.rw-brand {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	font-weight: 700;
+	font-size: 1.05rem;
+	color: var(--rw-text, #241C15);
+	text-decoration: none;
+	white-space: nowrap;
+}
+.rw-brand:hover {
+	text-decoration: none;
+}
+.rw-brand .rw-brand-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border: 1.5px solid var(--rw-text, #241C15);
+	border-radius: 50%;
+	font-size: 0.75rem;
+	font-weight: 700;
+	flex-shrink: 0;
+}
+
+CSS;
 	}
 
 	/**

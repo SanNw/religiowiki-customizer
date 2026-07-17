@@ -29,7 +29,7 @@ class GenerateSitemap extends Maintenance {
 
 	public function execute() {
 		global $IP;
-		$dbr = $this->getServiceContainer()->getDBLoadBalancer()->getConnectionRef( DB_REPLICA );
+		$dbr = $this->getServiceContainer()->getDBLoadBalancer()->getConnection( DB_REPLICA );
 
 		$res = $dbr->select(
 			'page',

@@ -49,7 +49,7 @@ class ThemeSettingsStore {
 	 *   campo novo existir).
 	 */
 	public function getTheme(): array {
-		$dbr = $this->loadBalancer->getConnectionRef( DB_REPLICA );
+		$dbr = $this->loadBalancer->getConnection( DB_REPLICA );
 		$row = $dbr->selectRow(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_value' ],
@@ -80,7 +80,7 @@ class ThemeSettingsStore {
 	public function saveTheme( array $values, ?int $actorId ): void {
 		$values = array_intersect_key( $values, self::DEFAULTS ) + self::DEFAULTS;
 
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->upsert(
 			'religiowiki_customizer_settings',
 			[
@@ -103,7 +103,7 @@ class ThemeSettingsStore {
 	 * Remove a configuração salva — o wiki volta a usar DEFAULTS.
 	 */
 	public function resetTheme(): void {
-		$dbw = $this->loadBalancer->getConnectionRef( DB_PRIMARY );
+		$dbw = $this->loadBalancer->getConnection( DB_PRIMARY );
 		$dbw->delete(
 			'religiowiki_customizer_settings',
 			[ 'rwcs_key' => self::SETTINGS_KEY ],
