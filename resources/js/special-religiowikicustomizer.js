@@ -26,38 +26,49 @@
 		textMuted: '--rw-text-muted'
 	};
 
+	// As três funções abaixo usam delegação de evento (listener no
+	// document/form, não no elemento final) de propósito: o OOUI infusiona
+	// (hidrata) o HTML estático do HTMLForm de forma assíncrona, depois do
+	// DOMContentLoaded -- o <input>/<textarea> real (dentro do <div>
+	// wrapper que carrega o id customizado; o wrapper em si recebe o id, o
+	// controle nativo dentro dele ganha um id autogerado tipo "ooui-php-N")
+	// muitas vezes ainda não existe no instante em que mount() roda. Buscar
+	// o elemento de verdade só no momento do clique/input (em vez de uma
+	// vez só no bind) evita essa corrida por completo.
+
 	function wireThemeLivePreview() {
 		var form = document.getElementById( 'religiowikicustomizer-form-theme' );
 		if ( !form ) {
 			return;
 		}
-		Object.keys( COLOR_TO_VAR ).forEach( function ( key ) {
-			// #mw-input-wp<key> é o <div> wrapper do OOUI, não o <input>
-			// real (mesmo problema do wireCssPreview/wireJsPreview) -- busca
-			// o <input> de verdade dentro do wrapper.
-			var wrapper = form.querySelector( '#mw-input-wp' + key );
-			var input = wrapper ? wrapper.querySelector( 'input' ) : null;
-			if ( !input ) {
+		form.addEventListener( 'input', function ( e ) {
+			var input = e.target;
+			if ( input.tagName !== 'INPUT' ) {
 				return;
 			}
-			input.addEventListener( 'input', function () {
-				document.documentElement.style.setProperty( COLOR_TO_VAR[ key ], input.value );
-			} );
+			var wrapper = input.closest( '[id^="mw-input-wp"]' );
+			if ( !wrapper ) {
+				return;
+			}
+			var key = wrapper.id.slice( 'mw-input-wp'.length );
+			if ( !COLOR_TO_VAR[ key ] ) {
+				return;
+			}
+			document.documentElement.style.setProperty( COLOR_TO_VAR[ key ], input.value );
 		} );
 	}
 
 	function wireCssPreview() {
-		var btn = document.getElementById( 'religiowikicustomizer-preview-css-btn' );
-		// No modo de exibição "ooui" do HTMLForm, o 'id' do campo vai pro
-		// <div> wrapper do OOUI, não pro <textarea> real (que recebe um id
-		// autogerado tipo "ooui-php-N") -- por isso busca o <textarea> real
-		// dentro do wrapper, em vez de getElementById direto.
-		var wrapper = document.getElementById( 'religiowikicustomizer-customcss-textarea' );
-		var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
-		if ( !btn || !textarea ) {
-			return;
-		}
-		btn.addEventListener( 'click', function ( e ) {
+		document.addEventListener( 'click', function ( e ) {
+			var btn = e.target.closest( '#religiowikicustomizer-preview-css-btn' );
+			if ( !btn ) {
+				return;
+			}
+			var wrapper = document.getElementById( 'religiowikicustomizer-customcss-textarea' );
+			var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
+			if ( !textarea ) {
+				return;
+			}
 			e.preventDefault();
 			var style = document.getElementById( 'religiowikicustomizer-preview-style' );
 			if ( !style ) {
@@ -70,15 +81,16 @@
 	}
 
 	function wireJsPreview() {
-		var btn = document.getElementById( 'religiowikicustomizer-preview-js-btn' );
-		// Mesmo problema do wireCssPreview: o wrapper OOUI fica com o id, o
-		// <textarea> real tem um id autogerado -- busca dentro do wrapper.
-		var wrapper = document.getElementById( 'religiowikicustomizer-customjs-textarea' );
-		var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
-		if ( !btn || !textarea ) {
-			return;
-		}
-		btn.addEventListener( 'click', function ( e ) {
+		document.addEventListener( 'click', function ( e ) {
+			var btn = e.target.closest( '#religiowikicustomizer-preview-js-btn' );
+			if ( !btn ) {
+				return;
+			}
+			var wrapper = document.getElementById( 'religiowikicustomizer-customjs-textarea' );
+			var textarea = wrapper ? wrapper.querySelector( 'textarea' ) : null;
+			if ( !textarea ) {
+				return;
+			}
 			e.preventDefault();
 			// Executa uma vez, só no navegador de quem clicou — mesmo
 			// código que rodaria pra todo mundo se fosse salvo (ver aviso
