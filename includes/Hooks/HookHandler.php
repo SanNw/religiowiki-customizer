@@ -2,10 +2,13 @@
 
 namespace MediaWiki\Extension\ReligiowikiCustomizer\Hooks;
 
+use MediaWiki\Extension\ReligiowikiCustomizer\Homepage\HomepageRenderer;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
 use MediaWiki\Hook\BeforePageDisplayHook;
+use MediaWiki\Hook\OutputPageBeforeHTMLHook;
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
 
-class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHook {
+class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHook, OutputPageBeforeHTMLHook {
 
 	/**
 	 * Adiciona os módulos de tema e de CSS/JS personalizado em toda página
@@ -23,6 +26,31 @@ class HookHandler implements BeforePageDisplayHook, LoadExtensionSchemaUpdatesHo
 			'ext.religiowikiCustomizer.customCss',
 		] );
 		$out->addModules( 'ext.religiowikiCustomizer.customJs' );
+	}
+
+	/**
+	 * Homepage Builder (Fase 3): só troca o conteúdo da Main Page se houver
+	 * pelo menos um bloco habilitado configurado. Se a extensão for
+	 * desativada, este hook nunca roda; se estiver ativa mas sem nenhum
+	 * bloco habilitado, $text permanece o HTML normal da página wiki — a
+	 * página em si continua existindo e editável como sempre (decisão de
+	 * arquitetura 1 da Fase 3: página wiki como fallback).
+	 *
+	 * @inheritDoc
+	 */
+	public function onOutputPageBeforeHTML( $out, &$text ): void {
+		$title = $out->getTitle();
+		if ( !$title || !$title->isMainPage() ) {
+			return;
+		}
+
+		$blocks = HomepageConfigStore::newFromGlobalState()->getEnabledBlocksInOrder();
+		if ( $blocks === [] ) {
+			return;
+		}
+
+		$out->addModuleStyles( 'ext.religiowikiCustomizer.homepage' );
+		$text = HomepageRenderer::render( $blocks );
 	}
 
 	/**

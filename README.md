@@ -7,7 +7,7 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1 e 2 concluídas
+## Status: Fases 1, 2 e 3 concluídas
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -20,6 +20,18 @@ textarea, botão "Salvar" e botão "Visualizar alterações" (aplica local, só
 no navegador de quem está editando, sem afetar outros visitantes até
 salvar de fato). Toda gravação (tema, CSS ou JS) fica registrada em
 `Special:Log/religiowikicustomizer` com autor e timestamp.
+
+**Fase 3** — Homepage Builder: aba `?tab=homepage` com 5 blocos (Hero
+Banner, Cards, Artigos em destaque, Categorias, Pesquisa), cada um com
+habilitar/desabilitar + campo de ordem numérico (sem drag-and-drop nesta
+versão — ver nota no código). A Main Page é substituída pelo layout
+configurado via hook `OutputPageBeforeHTML` **só se houver pelo menos um
+bloco habilitado**; sem nenhum bloco habilitado (ou com a extensão
+desativada), a página wiki normal continua sendo exibida e editável — é o
+fallback pedido pela Fase 3. "Artigos em destaque" nesta versão só suporta
+escolha manual de páginas (modo automático por mais visitadas não
+implementado — precisaria de uma fonte de dados de pageviews que não está
+garantida em toda instalação).
 
 ### Como funciona
 

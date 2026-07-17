@@ -1,6 +1,6 @@
 {
 	"name": "ReligiowikiCustomizer",
-	"version": "1.0.0-phase1",
+	"version": "1.0.0-phase3",
 	"author": [ "SanNw" ],
 	"url": "https://github.com/SanNw/religiowiki-customizer",
 	"descriptionmsg": "religiowikicustomizer-desc",
@@ -27,7 +27,8 @@
 	},
 	"Hooks": {
 		"BeforePageDisplay": "religiowikiCustomizerMain",
-		"LoadExtensionSchemaUpdates": "religiowikiCustomizerMain"
+		"LoadExtensionSchemaUpdates": "religiowikiCustomizerMain",
+		"OutputPageBeforeHTML": "religiowikiCustomizerMain"
 	},
 	"ResourceModules": {
 		"ext.religiowikiCustomizer.theme": {
@@ -45,6 +46,10 @@
 		"ext.religiowikiCustomizer.special": {
 			"styles": [ "resources/css/special-religiowikicustomizer.css" ],
 			"scripts": [ "resources/js/special-religiowikicustomizer.js" ],
+			"targets": [ "desktop", "mobile" ]
+		},
+		"ext.religiowikiCustomizer.homepage": {
+			"styles": [ "resources/css/homepage.css" ],
 			"targets": [ "desktop", "mobile" ]
 		}
 	},

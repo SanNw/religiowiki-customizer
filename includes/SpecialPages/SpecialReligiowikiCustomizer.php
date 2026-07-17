@@ -5,19 +5,21 @@ namespace MediaWiki\Extension\ReligiowikiCustomizer\SpecialPages;
 use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\CustomCodeStore;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\ThemeSettingsStore;
 use SpecialPage;
 use Status;
 
 /**
- * Special:ReligiowikiCustomizer — três abas:
+ * Special:ReligiowikiCustomizer — quatro abas:
  *   ?tab=aparencia (Fase 1) — cores, tipografia, largura máxima.
  *   ?tab=css       (Fase 2) — CSS personalizado.
  *   ?tab=js        (Fase 2) — JS personalizado.
+ *   ?tab=homepage  (Fase 3) — blocos da página principal.
  *
  * Cada aba é um HTMLForm independente (token CSRF próprio, automático).
  * Não usa mais FormSpecialPage (adequado só pra um formulário) porque agora
- * há três, cada um com seu próprio submit — ver README da extensão.
+ * há quatro, cada um com seu próprio submit — ver README da extensão.
  *
  * Permissão: restrita ao direito nativo `editinterface` (grupo sysop por
  * padrão) via SpecialPage::__construct(); SpecialPage::execute() chama
@@ -25,15 +27,17 @@ use Status;
  */
 class SpecialReligiowikiCustomizer extends SpecialPage {
 
-	private const TABS = [ 'aparencia', 'css', 'js' ];
+	private const TABS = [ 'aparencia', 'css', 'js', 'homepage' ];
 
 	private ThemeSettingsStore $themeStore;
 	private CustomCodeStore $codeStore;
+	private HomepageConfigStore $homepageStore;
 
 	public function __construct() {
 		parent::__construct( 'ReligiowikiCustomizer', 'editinterface' );
 		$this->themeStore = ThemeSettingsStore::newFromGlobalState();
 		$this->codeStore = CustomCodeStore::newFromGlobalState();
+		$this->homepageStore = HomepageConfigStore::newFromGlobalState();
 	}
 
 	/** @inheritDoc */
@@ -74,6 +78,9 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			case 'js':
 				$this->showJsForm();
 				break;
+			case 'homepage':
+				$this->showHomepageForm();
+				break;
 			default:
 				$this->showThemeForm();
 		}
@@ -86,6 +93,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			'aparencia' => 'religiowikicustomizer-tab-aparencia',
 			'css' => 'religiowikicustomizer-tab-css',
 			'js' => 'religiowikicustomizer-tab-js',
+			'homepage' => 'religiowikicustomizer-tab-homepage',
 		];
 		foreach ( $labels as $tab => $msgKey ) {
 			$class = $tab === $activeTab ? 'religiowikicustomizer-tab religiowikicustomizer-tab-active'
@@ -278,6 +286,131 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 	public function onSubmitJs( array $data ) {
 		$this->codeStore->saveCustomJs( (string)$data['customJs'], $this->getUser()->getActorId() );
 		$this->logChange( 'savejs' );
+		return Status::newGood();
+	}
+
+	// ---------- Aba Homepage Builder (Fase 3) ----------
+
+	/**
+	 * Um HTMLForm só com todos os blocos (campos prefixados por tipo, ex.:
+	 * 'hero_enabled', 'hero_title'). Reordenar é feito por um campo numérico
+	 * "ordem" por bloco — sem drag-and-drop nesta versão: arrastar exigiria
+	 * um layout OOUI/JS customizado por cima do HTMLForm, e o ganho de UX
+	 * não compensa o risco de quebrar em alguma versão do MediaWiki; number
+	 * input é 100% confiável e alcança o mesmo resultado funcional
+	 * (reordenar), só com um passo a mais de clique. Fica como possível
+	 * refinamento futuro, não como pendência bloqueante.
+	 */
+	private function showHomepageForm(): void {
+		$config = $this->homepageStore->getConfig();
+		$fields = [];
+
+		foreach ( $config as $type => $block ) {
+			$fields[ "{$type}_enabled" ] = [
+				'type' => 'check',
+				'label-message' => "religiowikicustomizer-homepage-{$type}-enabled",
+				'default' => (bool)$block['enabled'],
+			];
+			$fields[ "{$type}_order" ] = [
+				'type' => 'int',
+				'label-message' => 'religiowikicustomizer-homepage-order',
+				'default' => (int)$block['order'],
+				'min' => 1,
+			];
+
+			switch ( $type ) {
+				case 'hero':
+					$fields['hero_title'] = [
+						'type' => 'text',
+						'label-message' => 'religiowikicustomizer-homepage-hero-title',
+						'default' => $block['title'],
+					];
+					$fields['hero_subtitle'] = [
+						'type' => 'text',
+						'label-message' => 'religiowikicustomizer-homepage-hero-subtitle',
+						'default' => $block['subtitle'],
+					];
+					$fields['hero_backgroundImage'] = [
+						'type' => 'text',
+						'label-message' => 'religiowikicustomizer-homepage-hero-bg',
+						'default' => $block['backgroundImage'],
+					];
+					$fields['hero_ctaText'] = [
+						'type' => 'text',
+						'label-message' => 'religiowikicustomizer-homepage-hero-ctatext',
+						'default' => $block['ctaText'],
+					];
+					$fields['hero_ctaLink'] = [
+						'type' => 'text',
+						'label-message' => 'religiowikicustomizer-homepage-hero-ctalink',
+						'default' => $block['ctaLink'],
+					];
+					break;
+				case 'cards':
+					$fields['cards_itemsJson'] = [
+						'type' => 'textarea',
+						'rows' => 6,
+						'label-message' => 'religiowikicustomizer-homepage-cards-items',
+						'help-message' => 'religiowikicustomizer-homepage-cards-help',
+						'default' => $block['itemsJson'],
+					];
+					break;
+				case 'featured':
+					$fields['featured_pagesJson'] = [
+						'type' => 'textarea',
+						'rows' => 3,
+						'label-message' => 'religiowikicustomizer-homepage-featured-pages',
+						'help-message' => 'religiowikicustomizer-homepage-featured-help',
+						'default' => $block['pagesJson'],
+					];
+					break;
+				case 'categories':
+					$fields['categories_categoriesJson'] = [
+						'type' => 'textarea',
+						'rows' => 3,
+						'label-message' => 'religiowikicustomizer-homepage-categories-items',
+						'help-message' => 'religiowikicustomizer-homepage-categories-help',
+						'default' => $block['categoriesJson'],
+					];
+					break;
+			}
+		}
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-homepage' );
+		$form->addHiddenField( 'tab', 'homepage' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
+		$form->setSubmitCallback( [ $this, 'onSubmitHomepage' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+		}
+	}
+
+	/**
+	 * @param array $data Campos prefixados por tipo ('hero_title' etc.).
+	 * @return Status
+	 */
+	public function onSubmitHomepage( array $data ) {
+		$config = [];
+		foreach ( HomepageConfigStore::BLOCK_TYPES as $type ) {
+			$config[ $type ] = [
+				'enabled' => !empty( $data[ "{$type}_enabled" ] ),
+				'order' => (int)( $data[ "{$type}_order" ] ?? 0 ),
+			];
+			foreach ( $data as $key => $value ) {
+				if ( strpos( $key, "{$type}_" ) === 0 ) {
+					$field = substr( $key, strlen( "{$type}_" ) );
+					if ( $field !== 'enabled' && $field !== 'order' ) {
+						$config[ $type ][ $field ] = $value;
+					}
+				}
+			}
+		}
+
+		$this->homepageStore->saveConfig( $config, $this->getUser()->getActorId() );
+		$this->logChange( 'savehomepage' );
 		return Status::newGood();
 	}
 

@@ -1,0 +1,82 @@
+/*
+ * Estilo dos blocos da Homepage Builder — usa os mesmos tokens --rw-* do
+ * tema (Fase 1), consistente com o resto do wiki.
+ */
+.religiowikicustomizer-homepage {
+	max-width: var( --rw-max-width, 1200px );
+	margin: 0 auto;
+}
+
+.religiowikicustomizer-block {
+	margin-bottom: 1.5em;
+}
+
+.religiowikicustomizer-hero {
+	background-color: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 6px;
+	padding: 2em;
+	text-align: center;
+	background-size: cover;
+	background-position: center;
+}
+
+.religiowikicustomizer-hero-subtitle {
+	color: var( --rw-text-muted, #5C5142 );
+	font-style: italic;
+}
+
+.religiowikicustomizer-hero-cta {
+	display: inline-block;
+	margin-top: 1em;
+	padding: 0.5em 1.2em;
+	border-radius: 4px;
+	background: var( --rw-primary, #92400E );
+	color: #fff;
+	text-decoration: none;
+}
+
+.religiowikicustomizer-cards {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax( 220px, 1fr ) );
+	gap: 1em;
+}
+
+.religiowikicustomizer-card {
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 6px;
+	padding: 1em;
+}
+
+.religiowikicustomizer-card-icon {
+	font-size: 1.5em;
+	display: block;
+	margin-bottom: 0.3em;
+}
+
+.religiowikicustomizer-featured,
+.religiowikicustomizer-categories {
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 6px;
+	padding: 1em;
+}
+
+.religiowikicustomizer-categories ul {
+	margin: 0;
+	padding-left: 1.2em;
+}
+
+.religiowikicustomizer-search-block form {
+	display: flex;
+	gap: 0.5em;
+}
+
+.religiowikicustomizer-search-block input[type="text"] {
+	flex: 1 1 auto;
+	padding: 0.5em;
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 4px;
+	background: var( --rw-background, #FBF3E1 );
+}
