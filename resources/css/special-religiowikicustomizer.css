@@ -1,0 +1,17 @@
+/*
+ * Estilo mínimo do formulário em Special:ReligiowikiCustomizer. Usa os
+ * mesmos tokens --rw-* do tema (já disponíveis globalmente via
+ * ext.religiowikiCustomizer.theme, carregado em toda página) — mesmo sendo
+ * uma tela só de admin, mantém a identidade visual do projeto.
+ */
+#religiowikicustomizer-form {
+	max-width: 640px;
+}
+
+#religiowikicustomizer-form .oo-ui-fieldLayout {
+	margin-bottom: 1em;
+}
+
+#religiowikicustomizer-form input[type="text"] {
+	font-family: monospace;
+}

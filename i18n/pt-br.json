@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [ "SanNw" ]
+	},
+	"religiowikicustomizer-desc": "Painel administrativo para personalizar o tema, a página principal e os componentes da Religio Wiki",
+	"religiowikicustomizer": "ReligiowikiCustomizer",
+	"religiowikicustomizer-title": "Personalização da Religio Wiki",
+	"religiowikicustomizer-field-primary": "Cor primária (links)",
+	"religiowikicustomizer-field-secondary": "Cor secundária (destaques)",
+	"religiowikicustomizer-field-background": "Cor de fundo",
+	"religiowikicustomizer-field-surface": "Cor de superfície (painéis elevados)",
+	"religiowikicustomizer-field-border": "Cor de borda",
+	"religiowikicustomizer-field-text": "Cor do texto",
+	"religiowikicustomizer-field-textmuted": "Cor do texto secundário",
+	"religiowikicustomizer-field-fontfamily": "Família tipográfica (valor CSS font-family)",
+	"religiowikicustomizer-field-fontsizebase": "Tamanho base da fonte (valor CSS, ex.: 16px)",
+	"religiowikicustomizer-field-maxwidth": "Largura máxima do conteúdo (valor CSS, ex.: 1200px)",
+	"religiowikicustomizer-help-colorformat": "Cor em hexadecimal, ex.: #FBF3E1 ou #FBF3E1AA.",
+	"religiowikicustomizer-save": "Salvar",
+	"religiowikicustomizer-reset": "Restaurar padrão",
+	"religiowikicustomizer-saved": "Configuração de tema salva. Pode levar um instante pra aparecer — recarregue a página se precisar.",
+	"religiowikicustomizer-error-invalidcolor": "Informe uma cor hexadecimal válida (ex.: #FBF3E1)."
+}

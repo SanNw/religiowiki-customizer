@@ -1,0 +1,52 @@
+{
+	"name": "ReligiowikiCustomizer",
+	"version": "1.0.0-phase1",
+	"author": [ "SanNw" ],
+	"url": "https://github.com/SanNw/religiowiki-customizer",
+	"descriptionmsg": "religiowikicustomizer-desc",
+	"license-name": "GPL-2.0-or-later",
+	"type": "specialpage",
+	"requires": {
+		"MediaWiki": ">= 1.39.0"
+	},
+	"AutoloadNamespaces": {
+		"MediaWiki\\Extension\\ReligiowikiCustomizer\\": "includes/"
+	},
+	"MessagesDirs": {
+		"ReligiowikiCustomizer": [ "i18n" ]
+	},
+	"SpecialPages": {
+		"ReligiowikiCustomizer": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\SpecialPages\\SpecialReligiowikiCustomizer"
+		}
+	},
+	"HookHandlers": {
+		"religiowikiCustomizerMain": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Hooks\\HookHandler"
+		}
+	},
+	"Hooks": {
+		"BeforePageDisplay": "religiowikiCustomizerMain",
+		"LoadExtensionSchemaUpdates": "religiowikiCustomizerMain"
+	},
+	"ResourceModules": {
+		"ext.religiowikiCustomizer.theme": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Theme\\ThemeResourceLoaderModule",
+			"targets": [ "desktop", "mobile" ]
+		},
+		"ext.religiowikiCustomizer.special": {
+			"styles": [ "resources/css/special-religiowikicustomizer.css" ]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "",
+		"remoteExtPath": "ReligiowikiCustomizer"
+	},
+	"config": {
+		"ReligiowikiCustomizerRight": {
+			"value": "editinterface",
+			"description": "Direito exigido para acessar Special:ReligiowikiCustomizer. Reaproveita o direito nativo 'editinterface' (já concedido a sysop por padrão) em vez de criar um direito novo — ver Fase 1 do prompt mestre."
+		}
+	},
+	"manifest_version": 2
+}

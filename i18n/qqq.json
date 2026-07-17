@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [ "SanNw" ]
+	},
+	"religiowikicustomizer-desc": "{{desc|name=ReligiowikiCustomizer|url=https://github.com/SanNw/religiowiki-customizer}}",
+	"religiowikicustomizer": "Display name of [[Special:ReligiowikiCustomizer]] used in [[Special:SpecialPages]] and as the message key convention for a special page's canonical name.",
+	"religiowikicustomizer-title": "Page title shown at the top of Special:ReligiowikiCustomizer.",
+	"religiowikicustomizer-field-primary": "Label for the primary/link color field.",
+	"religiowikicustomizer-field-secondary": "Label for the secondary/accent color field.",
+	"religiowikicustomizer-field-background": "Label for the page background color field.",
+	"religiowikicustomizer-field-surface": "Label for the elevated-surface (cards, sidebar boxes) color field.",
+	"religiowikicustomizer-field-border": "Label for the border color field.",
+	"religiowikicustomizer-field-text": "Label for the main text color field.",
+	"religiowikicustomizer-field-textmuted": "Label for the muted/secondary text color field.",
+	"religiowikicustomizer-field-fontfamily": "Label for the font-family field (raw CSS font-family value).",
+	"religiowikicustomizer-field-fontsizebase": "Label for the base font-size field (raw CSS value).",
+	"religiowikicustomizer-field-maxwidth": "Label for the max content width field (raw CSS value).",
+	"religiowikicustomizer-help-colorformat": "Help text shown under each color field explaining the expected hex format.",
+	"religiowikicustomizer-save": "{{identical|Save}}",
+	"religiowikicustomizer-reset": "Label of the button that deletes saved settings, falling back to the extension's built-in defaults.",
+	"religiowikicustomizer-saved": "Success message shown after saving the form.",
+	"religiowikicustomizer-error-invalidcolor": "Validation error shown when a color field isn't a valid hex color."
+}

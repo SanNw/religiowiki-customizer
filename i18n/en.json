@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [ "SanNw" ]
+	},
+	"religiowikicustomizer-desc": "Admin panel to customize Religio Wiki's theme, homepage and components",
+	"religiowikicustomizer": "ReligiowikiCustomizer",
+	"religiowikicustomizer-title": "Religio Wiki customizer",
+	"religiowikicustomizer-field-primary": "Primary color (links)",
+	"religiowikicustomizer-field-secondary": "Secondary color (accents)",
+	"religiowikicustomizer-field-background": "Background color",
+	"religiowikicustomizer-field-surface": "Surface color (elevated panels)",
+	"religiowikicustomizer-field-border": "Border color",
+	"religiowikicustomizer-field-text": "Text color",
+	"religiowikicustomizer-field-textmuted": "Muted text color",
+	"religiowikicustomizer-field-fontfamily": "Font family (CSS font-family value)",
+	"religiowikicustomizer-field-fontsizebase": "Base font size (CSS value, e.g. 16px)",
+	"religiowikicustomizer-field-maxwidth": "Maximum content width (CSS value, e.g. 1200px)",
+	"religiowikicustomizer-help-colorformat": "Hex color, e.g. #FBF3E1 or #FBF3E1AA.",
+	"religiowikicustomizer-save": "Save",
+	"religiowikicustomizer-reset": "Restore defaults",
+	"religiowikicustomizer-saved": "Theme settings saved. It may take a moment for the change to appear — reload the page if needed.",
+	"religiowikicustomizer-error-invalidcolor": "Enter a valid hex color (e.g. #FBF3E1)."
+}

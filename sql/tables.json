@@ -1,0 +1,47 @@
+[
+	{
+		"name": "religiowiki_customizer_settings",
+		"comment": "Armazenamento chave-valor genérico do ReligiowikiCustomizer. Uma linha por grupo de configuração (rwcs_key), com o payload em JSON em rwcs_value. Esse desenho — em vez de uma coluna por campo — é o que permite às Fases 2+ (CSS/JS personalizado, homepage, componentes) reutilizar a mesma tabela sem migração de schema; ver decisão de arquitetura 3 da Fase 1.",
+		"columns": [
+			{
+				"name": "rwcs_id",
+				"comment": "Chave primária técnica.",
+				"type": "integer",
+				"options": { "autoincrement": true, "notnull": true, "unsigned": true }
+			},
+			{
+				"name": "rwcs_key",
+				"comment": "Identificador do grupo de configuração. Fase 1 usa só 'theme'; Fase 2 acrescenta 'custom_css'/'custom_js'; Fase 3 acrescenta 'homepage'.",
+				"type": "binary",
+				"options": { "notnull": true, "length": 64 }
+			},
+			{
+				"name": "rwcs_value",
+				"comment": "Payload JSON-encoded do grupo de configuração.",
+				"type": "blob",
+				"options": { "notnull": false, "length": 16777215 }
+			},
+			{
+				"name": "rwcs_updated",
+				"comment": "Timestamp da última gravação (usado também para invalidar o hash de versão do módulo ResourceLoader).",
+				"type": "mwtimestamp",
+				"options": { "notnull": true }
+			},
+			{
+				"name": "rwcs_updated_by_actor",
+				"comment": "actor_id de quem salvou por último (auditoria; NULL se desconhecido/migração).",
+				"type": "bigint",
+				"options": { "notnull": false, "unsigned": true }
+			}
+		],
+		"indexes": [
+			{
+				"name": "rwcs_key",
+				"comment": "Um grupo de configuração só pode ter uma linha — permite upsert por chave.",
+				"columns": [ "rwcs_key" ],
+				"unique": true
+			}
+		],
+		"pk": [ "rwcs_id" ]
+	}
+]
