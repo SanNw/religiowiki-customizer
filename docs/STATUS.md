@@ -12,7 +12,7 @@ README (instalação/uso) nem o prompt mestre das 8 fases — é só um mapa.
 | 2. Editor CSS/JS | ✅ Feita | Abas CSS/JS, preview local, log de auditoria |
 | 3. Homepage Builder | ✅ Feita | Aba Homepage, 8 blocos (5 + Notícias/Livros/Estatísticas da Fase 4), substitui a Main Page com fallback |
 | 4. Componentes | ✅ Feita | 8 parser tags (`<rwcard>`, `<rwalert>`, `<rwaccordion>`, `<rwtabs>`, `<rwquote>`, `<rwbadge>`, `<rwcallout>`, `<rwgrid>`) — ver `docs/COMPONENTS.md` |
-| 5. Widgets semânticos | ⬜ Não iniciada | Infobox, Livro, Autor, Religião... |
+| 5. Widgets semânticos | ✅ Feita | `<rwinfobox>`, `<rwbook>`, `<rwauthor>`, `<rwreligion>`, `<rwschool>`, `<rwtimeline>` — ver `docs/WIDGETS.md`. Citação reaproveita `<rwquote>`; Mapa documentado como pendência (não implementado) |
 | 6. SEO | ⬜ Não iniciada | Meta tags, sitemap, JSON-LD |
 | 7. Performance/skin | ⬜ Não iniciada | Lazy loading, detecção de skin |
 | 8. API REST/testes | ⬜ Não iniciada | Endpoints REST, export/import, PHPUnit |
@@ -64,6 +64,17 @@ de escrever mais código em cima.
   aninhamento — `recursiveTagParse` deveria lidar com isso corretamente
   (é o mecanismo padrão do MediaWiki pra tags aninhadas), mas não foi
   verificado ao vivo.
+- `maintenance/generateConvenienceTemplates.php` (Fase 5) usa
+  `WikiPage::newPageUpdater()` + `User::newSystemUser()` — API estável nas
+  versões recentes, mas nunca rodada de verdade; se `requireExtension()`
+  ou a criação do usuário de sistema falhar de um jeito inesperado, é o
+  primeiro lugar a olhar. Rodar manualmente depois de aplicar a Fase 5:
+  `docker compose exec mediawiki php extensions/ReligiowikiCustomizer/maintenance/generateConvenienceTemplates.php`.
+- `InfoboxBoxRenderer` monta a imagem via `$parser->recursiveTagParse()`
+  com sintaxe `[[Arquivo:...]]` — isso já corrigiu um bug real que eu
+  mesmo cometi na primeira versão (embutir wikitext cru direto no HTML
+  retornado não vira imagem sozinho, precisa passar pelo parser); vale
+  conferir visualmente no primeiro teste que a imagem realmente aparece.
 
 ## Mapa de arquivos
 
@@ -83,11 +94,14 @@ includes/
     CustomJsResourceLoaderModule.php               serve o JS personalizado
   Homepage/HomepageRenderer.php                    HTML dos blocos da homepage
   Components/                                      8 parser tags (Fase 4) + LinkSanitizer/SegmentSplitter compartilhados
+  Widgets/                                          6 widgets semânticos (Fase 5) + InfoboxBoxRenderer compartilhado
   SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (4 abas)
 sql/tables.json + sql/mysql/tables-generated.sql   a única tabela (chave-valor genérica)
 resources/                                        CSS/JS servidos ao navegador
 i18n/                                              en.json (fonte), qqq.json (docs), pt-br.json
+maintenance/generateConvenienceTemplates.php      gera Template:Infobox religião etc. (Fase 5)
 docs/COMPONENTS.md                                sintaxe de uso de cada parser tag (pra editores, não só devs)
+docs/WIDGETS.md                                   sintaxe de uso de cada widget semântico
 ```
 
 Tudo fica em **uma tabela só** (`religiowiki_customizer_settings`,

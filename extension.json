@@ -1,6 +1,6 @@
 {
 	"name": "ReligiowikiCustomizer",
-	"version": "1.0.0-phase4",
+	"version": "1.0.0-phase5",
 	"author": [ "SanNw" ],
 	"url": "https://github.com/SanNw/religiowiki-customizer",
 	"descriptionmsg": "religiowikicustomizer-desc",
@@ -59,6 +59,10 @@
 		},
 		"ext.religiowikiCustomizer.componentsJs": {
 			"scripts": [ "resources/js/components.js" ],
+			"targets": [ "desktop", "mobile" ]
+		},
+		"ext.religiowikiCustomizer.widgets": {
+			"styles": [ "resources/css/widgets.css" ],
 			"targets": [ "desktop", "mobile" ]
 		}
 	},

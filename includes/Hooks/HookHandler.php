@@ -12,6 +12,12 @@ use MediaWiki\Extension\ReligiowikiCustomizer\Components\QuoteComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Components\TabsComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Homepage\HomepageRenderer;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\AuthorWidget;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\BookWidget;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\InfoboxWidget;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\ReligionWidget;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\SchoolWidget;
+use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\TimelineWidget;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageBeforeHTMLHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
@@ -38,6 +44,7 @@ class HookHandler implements
 			'ext.religiowikiCustomizer.theme',
 			'ext.religiowikiCustomizer.customCss',
 			'ext.religiowikiCustomizer.components',
+			'ext.religiowikiCustomizer.widgets',
 		] );
 		$out->addModules( [
 			'ext.religiowikiCustomizer.customJs',
@@ -71,9 +78,14 @@ class HookHandler implements
 	}
 
 	/**
-	 * Registra os parser tags da biblioteca de componentes (Fase 4).
-	 * Qualquer editor do grupo `editor` (não só admin) pode usar isso em
-	 * wikitext — ver escape rigoroso em cada classe de componente.
+	 * Registra os parser tags da biblioteca de componentes (Fase 4) e dos
+	 * widgets semânticos (Fase 5). Qualquer editor do grupo `editor` (não
+	 * só admin) pode usar isso em wikitext — ver escape rigoroso em cada
+	 * classe. `<rwquote>` (Fase 4) já cobre "Citação" da Fase 5 — não
+	 * duplicado como uma segunda tag. "Mapa" não tem tag registrada nesta
+	 * fase (ver docs/STATUS.md — dependeria de dados geográficos e
+	 * possivelmente uma lib externa tipo Leaflet, documentado como
+	 * pendente em vez de implementado às pressas).
 	 *
 	 * @inheritDoc
 	 */
@@ -86,6 +98,13 @@ class HookHandler implements
 		$parser->setHook( 'rwbadge', [ BadgeComponent::class, 'render' ] );
 		$parser->setHook( 'rwcallout', [ CalloutComponent::class, 'render' ] );
 		$parser->setHook( 'rwgrid', [ GridComponent::class, 'render' ] );
+
+		$parser->setHook( 'rwinfobox', [ InfoboxWidget::class, 'render' ] );
+		$parser->setHook( 'rwbook', [ BookWidget::class, 'render' ] );
+		$parser->setHook( 'rwauthor', [ AuthorWidget::class, 'render' ] );
+		$parser->setHook( 'rwreligion', [ ReligionWidget::class, 'render' ] );
+		$parser->setHook( 'rwschool', [ SchoolWidget::class, 'render' ] );
+		$parser->setHook( 'rwtimeline', [ TimelineWidget::class, 'render' ] );
 	}
 
 	/**

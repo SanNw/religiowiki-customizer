@@ -65,5 +65,22 @@
 	"religiowikicustomizer-homepage-estatisticas-items": "Label for the Statistics block's JSON items textarea.",
 	"religiowikicustomizer-homepage-estatisticas-help": "Help text explaining the expected JSON shape for the Statistics block.",
 	"religiowikicustomizer-accordion-defaulttitle": "Fallback label used by <rwaccordion> when the 'titulo' parameter is missing.",
-	"religiowikicustomizer-tabs-defaultlabel": "Fallback label used by <rwtabs> for a segment with no label line. $1 is the tab's 1-based position."
+	"religiowikicustomizer-tabs-defaultlabel": "Fallback label used by <rwtabs> for a segment with no label line. $1 is the tab's 1-based position.",
+	"religiowikicustomizer-infobox-grupo": "Label for the \"Grupo\" (classification group) row of the <rwinfobox> widget (Fase 5).",
+	"religiowikicustomizer-infobox-relacionadas": "Label for the \"Relacionadas\" row of the <rwinfobox> widget.",
+	"religiowikicustomizer-infobox-textocentral": "Label for the \"Texto central\" row of the <rwinfobox> widget.",
+	"religiowikicustomizer-infobox-origem": "Label for the \"Origem\" row of the <rwinfobox> widget.",
+	"religiowikicustomizer-book-autor": "Label for the author row of the <rwbook> widget.",
+	"religiowikicustomizer-book-ano": "Label for the year row of the <rwbook> widget.",
+	"religiowikicustomizer-book-editora": "Label for the publisher row of the <rwbook> widget.",
+	"religiowikicustomizer-book-sinopse": "Label for the synopsis row of the <rwbook> widget.",
+	"religiowikicustomizer-author-datas": "Label for the dates row of the <rwauthor> widget.",
+	"religiowikicustomizer-author-tradicao": "Label for the tradition/school row of the <rwauthor> widget.",
+	"religiowikicustomizer-author-obras": "Label for the main-works row of the <rwauthor> widget.",
+	"religiowikicustomizer-religion-origem": "Label for the origin row of the <rwreligion> widget.",
+	"religiowikicustomizer-religion-periodo": "Label for the period row of the <rwreligion> widget.",
+	"religiowikicustomizer-religion-ramos": "Label for the branches/schools row of the <rwreligion> widget.",
+	"religiowikicustomizer-school-fundador": "Label for the founder row of the <rwschool> widget.",
+	"religiowikicustomizer-school-periodo": "Label for the period row of the <rwschool> widget.",
+	"religiowikicustomizer-school-conceitos": "Label for the main-concepts row of the <rwschool> widget."
 }

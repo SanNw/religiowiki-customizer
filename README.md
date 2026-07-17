@@ -7,7 +7,7 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1, 2, 3 e 4 concluídas
+## Status: Fases 1 a 5 concluídas
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -45,6 +45,16 @@ de protocolo, `$wgUrlProtocols`, que o wikitext nativo já faz). A Homepage
 Builder ganhou 3 blocos novos que dependiam disso (Notícias, Livros,
 Estatísticas), e o bloco "Cards" existente foi refeito pra reaproveitar
 `CardComponent::buildHtml` em vez de markup duplicado.
+
+**Fase 5** — Widgets semânticos: `<rwinfobox>`, `<rwbook>`, `<rwauthor>`,
+`<rwreligion>`, `<rwschool>`, `<rwtimeline>` — ver
+[`docs/WIDGETS.md`](docs/WIDGETS.md). "Citação" reaproveita `<rwquote>` da
+Fase 4 (não duplicado); "Mapa" fica documentado como pendência, não
+implementado (dependeria de dados geográficos + lib externa, passivo de
+manutenção maior que os demais). `maintenance/generateConvenienceTemplates.php`
+gera templates de conveniência (`Template:Infobox religião` etc.) que só
+chamam os widgets — mantém compatível qualquer artigo escrito antes da
+Fase 5 com `{{Infobox religião|...}}`.
 
 ### Como funciona
 

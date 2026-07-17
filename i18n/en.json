@@ -65,5 +65,22 @@
 	"religiowikicustomizer-homepage-estatisticas-items": "Statistics: items (JSON)",
 	"religiowikicustomizer-homepage-estatisticas-help": "JSON array, e.g. <code>[{\"label\":\"Articles\",\"value\":\"120\"}]</code>.",
 	"religiowikicustomizer-accordion-defaulttitle": "Details",
-	"religiowikicustomizer-tabs-defaultlabel": "Tab $1"
+	"religiowikicustomizer-tabs-defaultlabel": "Tab $1",
+	"religiowikicustomizer-infobox-grupo": "Group",
+	"religiowikicustomizer-infobox-relacionadas": "Related",
+	"religiowikicustomizer-infobox-textocentral": "Central text",
+	"religiowikicustomizer-infobox-origem": "Origin",
+	"religiowikicustomizer-book-autor": "Author",
+	"religiowikicustomizer-book-ano": "Year",
+	"religiowikicustomizer-book-editora": "Publisher",
+	"religiowikicustomizer-book-sinopse": "Synopsis",
+	"religiowikicustomizer-author-datas": "Dates",
+	"religiowikicustomizer-author-tradicao": "Tradition/school",
+	"religiowikicustomizer-author-obras": "Main works",
+	"religiowikicustomizer-religion-origem": "Origin",
+	"religiowikicustomizer-religion-periodo": "Period",
+	"religiowikicustomizer-religion-ramos": "Branches/schools",
+	"religiowikicustomizer-school-fundador": "Founder",
+	"religiowikicustomizer-school-periodo": "Period",
+	"religiowikicustomizer-school-conceitos": "Main concepts"
 }
