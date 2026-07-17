@@ -82,5 +82,13 @@
 	"religiowikicustomizer-religion-ramos": "Label for the branches/schools row of the <rwreligion> widget.",
 	"religiowikicustomizer-school-fundador": "Label for the founder row of the <rwschool> widget.",
 	"religiowikicustomizer-school-periodo": "Label for the period row of the <rwschool> widget.",
-	"religiowikicustomizer-school-conceitos": "Label for the main-concepts row of the <rwschool> widget."
+	"religiowikicustomizer-school-conceitos": "Label for the main-concepts row of the <rwschool> widget.",
+	"religiowikicustomizer-tab-seo": "Tab label for the Fase 6 SEO settings.",
+	"religiowikicustomizer-seo-sitename": "Label for the site name override field, used in JSON-LD WebSite schema.",
+	"religiowikicustomizer-seo-description": "Label for the default (site-wide fallback) meta description field.",
+	"religiowikicustomizer-seo-ogimage": "Label for the default Open Graph image URL field.",
+	"religiowikicustomizer-seo-twitter": "Label for the Twitter/X handle field, used in the twitter:site meta tag.",
+	"religiowikicustomizer-seo-help": "Help text explaining the {{#rwseo:description|...}} parser function for per-page meta description override. Contains <nowiki> and <code>, parsed as wikitext.",
+	"religiowikicustomizer-breadcrumb-home": "Label of the \"Home\" link in the breadcrumb trail shown above articles.",
+	"logentry-religiowikicustomizer-saveseo": "Log entry shown when an admin saves the SEO settings form. $1 is the performer's user link."
 }

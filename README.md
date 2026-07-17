@@ -7,7 +7,7 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1 a 5 concluídas
+## Status: Fases 1 a 6 concluídas
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -55,6 +55,18 @@ manutenção maior que os demais). `maintenance/generateConvenienceTemplates.php
 gera templates de conveniência (`Template:Infobox religião` etc.) que só
 chamam os widgets — mantém compatível qualquer artigo escrito antes da
 Fase 5 com `{{Infobox religião|...}}`.
+
+**Fase 6** — SEO: aba `?tab=seo` (nome do site, descrição padrão, imagem
+OG padrão, Twitter handle). Meta Description, OpenGraph, Twitter Card,
+canonical URL, robots (`noindex` fora do namespace principal) e JSON-LD
+(`WebSite` na Main Page, `Article` nos artigos) injetados via
+`BeforePageDisplay`. Meta description por página via
+`{{#rwseo:description|texto}}` (page property, sem extração automática de
+parágrafo — decisão explícita, custo/benefício não compensava). Breadcrumbs
+baseados na primeira categoria do artigo, prependidos ao conteúdo em
+qualquer página do namespace principal (exceto a Main Page).
+`maintenance/generateSitemap.php` gera `sitemap.xml` (agendável via cron,
+não sob demanda).
 
 ### Como funciona
 

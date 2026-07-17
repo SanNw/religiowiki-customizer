@@ -6,20 +6,22 @@ use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\CustomCodeStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\SeoSettingsStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\ThemeSettingsStore;
 use SpecialPage;
 use Status;
 
 /**
- * Special:ReligiowikiCustomizer — quatro abas:
+ * Special:ReligiowikiCustomizer — cinco abas:
  *   ?tab=aparencia (Fase 1) — cores, tipografia, largura máxima.
  *   ?tab=css       (Fase 2) — CSS personalizado.
  *   ?tab=js        (Fase 2) — JS personalizado.
  *   ?tab=homepage  (Fase 3) — blocos da página principal.
+ *   ?tab=seo       (Fase 6) — nome do site, descrição/imagem/Twitter padrão.
  *
  * Cada aba é um HTMLForm independente (token CSRF próprio, automático).
  * Não usa mais FormSpecialPage (adequado só pra um formulário) porque agora
- * há quatro, cada um com seu próprio submit — ver README da extensão.
+ * há cinco, cada um com seu próprio submit — ver README da extensão.
  *
  * Permissão: restrita ao direito nativo `editinterface` (grupo sysop por
  * padrão) via SpecialPage::__construct(); SpecialPage::execute() chama
@@ -27,17 +29,19 @@ use Status;
  */
 class SpecialReligiowikiCustomizer extends SpecialPage {
 
-	private const TABS = [ 'aparencia', 'css', 'js', 'homepage' ];
+	private const TABS = [ 'aparencia', 'css', 'js', 'homepage', 'seo' ];
 
 	private ThemeSettingsStore $themeStore;
 	private CustomCodeStore $codeStore;
 	private HomepageConfigStore $homepageStore;
+	private SeoSettingsStore $seoStore;
 
 	public function __construct() {
 		parent::__construct( 'ReligiowikiCustomizer', 'editinterface' );
 		$this->themeStore = ThemeSettingsStore::newFromGlobalState();
 		$this->codeStore = CustomCodeStore::newFromGlobalState();
 		$this->homepageStore = HomepageConfigStore::newFromGlobalState();
+		$this->seoStore = SeoSettingsStore::newFromGlobalState();
 	}
 
 	/** @inheritDoc */
@@ -81,6 +85,9 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			case 'homepage':
 				$this->showHomepageForm();
 				break;
+			case 'seo':
+				$this->showSeoForm();
+				break;
 			default:
 				$this->showThemeForm();
 		}
@@ -94,6 +101,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			'css' => 'religiowikicustomizer-tab-css',
 			'js' => 'religiowikicustomizer-tab-js',
 			'homepage' => 'religiowikicustomizer-tab-homepage',
+			'seo' => 'religiowikicustomizer-tab-seo',
 		];
 		foreach ( $labels as $tab => $msgKey ) {
 			$class = $tab === $activeTab ? 'religiowikicustomizer-tab religiowikicustomizer-tab-active'
@@ -438,6 +446,58 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 
 		$this->homepageStore->saveConfig( $config, $this->getUser()->getActorId() );
 		$this->logChange( 'savehomepage' );
+		return Status::newGood();
+	}
+
+	// ---------- Aba SEO (Fase 6) ----------
+
+	private function showSeoForm(): void {
+		$current = $this->seoStore->getSettings();
+
+		$fields = [
+			'siteNameOverride' => [
+				'type' => 'text',
+				'label-message' => 'religiowikicustomizer-seo-sitename',
+				'default' => $current['siteNameOverride'],
+			],
+			'defaultDescription' => [
+				'type' => 'textarea',
+				'rows' => 3,
+				'label-message' => 'religiowikicustomizer-seo-description',
+				'default' => $current['defaultDescription'],
+			],
+			'defaultOgImage' => [
+				'type' => 'text',
+				'label-message' => 'religiowikicustomizer-seo-ogimage',
+				'default' => $current['defaultOgImage'],
+			],
+			'twitterHandle' => [
+				'type' => 'text',
+				'label-message' => 'religiowikicustomizer-seo-twitter',
+				'default' => $current['twitterHandle'],
+			],
+		];
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-seo' );
+		$form->addHiddenField( 'tab', 'seo' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
+		$form->addPreText( $this->msg( 'religiowikicustomizer-seo-help' )->parseAsBlock() );
+		$form->setSubmitCallback( [ $this, 'onSubmitSeo' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+		}
+	}
+
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitSeo( array $data ) {
+		$this->seoStore->saveSettings( $data, $this->getUser()->getActorId() );
+		$this->logChange( 'saveseo' );
 		return Status::newGood();
 	}
 

@@ -82,5 +82,13 @@
 	"religiowikicustomizer-religion-ramos": "Branches/schools",
 	"religiowikicustomizer-school-fundador": "Founder",
 	"religiowikicustomizer-school-periodo": "Period",
-	"religiowikicustomizer-school-conceitos": "Main concepts"
+	"religiowikicustomizer-school-conceitos": "Main concepts",
+	"religiowikicustomizer-tab-seo": "SEO",
+	"religiowikicustomizer-seo-sitename": "Site name override (used in JSON-LD; blank uses the wiki's own name)",
+	"religiowikicustomizer-seo-description": "Default meta description (used when an article doesn't set its own via {{#rwseo:description|...}})",
+	"religiowikicustomizer-seo-ogimage": "Default Open Graph image URL",
+	"religiowikicustomizer-seo-twitter": "Twitter/X handle (with or without @)",
+	"religiowikicustomizer-seo-help": "Per-page meta description: add <code><nowiki>{{#rwseo:description|Custom text for this article}}</nowiki></code> anywhere in the article's wikitext.",
+	"religiowikicustomizer-breadcrumb-home": "Home",
+	"logentry-religiowikicustomizer-saveseo": "$1 updated the SEO settings"
 }

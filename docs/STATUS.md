@@ -13,7 +13,7 @@ README (instalação/uso) nem o prompt mestre das 8 fases — é só um mapa.
 | 3. Homepage Builder | ✅ Feita | Aba Homepage, 8 blocos (5 + Notícias/Livros/Estatísticas da Fase 4), substitui a Main Page com fallback |
 | 4. Componentes | ✅ Feita | 8 parser tags (`<rwcard>`, `<rwalert>`, `<rwaccordion>`, `<rwtabs>`, `<rwquote>`, `<rwbadge>`, `<rwcallout>`, `<rwgrid>`) — ver `docs/COMPONENTS.md` |
 | 5. Widgets semânticos | ✅ Feita | `<rwinfobox>`, `<rwbook>`, `<rwauthor>`, `<rwreligion>`, `<rwschool>`, `<rwtimeline>` — ver `docs/WIDGETS.md`. Citação reaproveita `<rwquote>`; Mapa documentado como pendência (não implementado) |
-| 6. SEO | ⬜ Não iniciada | Meta tags, sitemap, JSON-LD |
+| 6. SEO | ✅ Feita | Meta description/OG/Twitter/canonical/robots/JSON-LD, `{{#rwseo:description\|...}}`, breadcrumbs, `maintenance/generateSitemap.php` |
 | 7. Performance/skin | ⬜ Não iniciada | Lazy loading, detecção de skin |
 | 8. API REST/testes | ⬜ Não iniciada | Endpoints REST, export/import, PHPUnit |
 
@@ -75,6 +75,18 @@ de escrever mais código em cima.
   mesmo cometi na primeira versão (embutir wikitext cru direto no HTML
   retornado não vira imagem sozinho, precisa passar pelo parser); vale
   conferir visualmente no primeiro teste que a imagem realmente aparece.
+- `OutputPage::getCategories()` (usado em `HookHandler::onOutputPageBeforeHTML`
+  pros breadcrumbs) — não tive 100% de certeza se o retorno é indexado ou
+  associativo entre versões do core, então normalizei com
+  `array_values(array_map('strval', ...))` em vez de assumir uma forma
+  específica. Se os breadcrumbs vierem vazios num artigo que tem categoria
+  de verdade, é o primeiro lugar a conferir.
+- `OutputPage::addMeta()`/`addHeadItem()`/`setCanonicalUrl()`/`getProperty()`
+  (`SeoInjector`) são métodos estáveis e antigos do core — baixo risco,
+  mas nunca chamados nesta instalação especificamente.
+- `Parser::setFunctionHook()` (`{{#rwseo:...}}`) — verificar se o parser
+  function realmente aparece disponível em `Special:Version` → "Funções
+  do analisador" depois do primeiro carregamento.
 
 ## Mapa de arquivos
 
@@ -95,11 +107,13 @@ includes/
   Homepage/HomepageRenderer.php                    HTML dos blocos da homepage
   Components/                                      8 parser tags (Fase 4) + LinkSanitizer/SegmentSplitter compartilhados
   Widgets/                                          6 widgets semânticos (Fase 5) + InfoboxBoxRenderer compartilhado
-  SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (4 abas)
+  SEO/                                               SeoInjector, SeoParserFunction, BreadcrumbBuilder (Fase 6)
+  SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (5 abas)
 sql/tables.json + sql/mysql/tables-generated.sql   a única tabela (chave-valor genérica)
 resources/                                        CSS/JS servidos ao navegador
 i18n/                                              en.json (fonte), qqq.json (docs), pt-br.json
 maintenance/generateConvenienceTemplates.php      gera Template:Infobox religião etc. (Fase 5)
+maintenance/generateSitemap.php                   gera sitemap.xml (Fase 6, agendável via cron)
 docs/COMPONENTS.md                                sintaxe de uso de cada parser tag (pra editores, não só devs)
 docs/WIDGETS.md                                   sintaxe de uso de cada widget semântico
 ```
