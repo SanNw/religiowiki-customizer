@@ -14,7 +14,7 @@ README (instalação/uso) nem o prompt mestre das 8 fases — é só um mapa.
 | 4. Componentes | ✅ Feita | 8 parser tags (`<rwcard>`, `<rwalert>`, `<rwaccordion>`, `<rwtabs>`, `<rwquote>`, `<rwbadge>`, `<rwcallout>`, `<rwgrid>`) — ver `docs/COMPONENTS.md` |
 | 5. Widgets semânticos | ✅ Feita | `<rwinfobox>`, `<rwbook>`, `<rwauthor>`, `<rwreligion>`, `<rwschool>`, `<rwtimeline>` — ver `docs/WIDGETS.md`. Citação reaproveita `<rwquote>`; Mapa documentado como pendência (não implementado) |
 | 6. SEO | ✅ Feita | Meta description/OG/Twitter/canonical/robots/JSON-LD, `{{#rwseo:description\|...}}`, breadcrumbs, `maintenance/generateSitemap.php` |
-| 7. Performance/skin | ⬜ Não iniciada | Lazy loading, detecção de skin |
+| 7. Performance/skin | ✅ Feita | Lazy loading nativo, preload de fontes, classe `rwc-skin-*` no body, barra de inserção rápida no editor |
 | 8. API REST/testes | ⬜ Não iniciada | Endpoints REST, export/import, PHPUnit |
 
 ## ⚠️ Nunca testado contra um MediaWiki real
@@ -87,6 +87,16 @@ de escrever mais código em cima.
 - `Parser::setFunctionHook()` (`{{#rwseo:...}}`) — verificar se o parser
   function realmente aparece disponível em `Special:Version` → "Funções
   do analisador" depois do primeiro carregamento.
+- `onEditPage__showEditForm_initial` (Fase 7) — nome de método mangled a
+  partir do hook `"EditPage::showEditForm:initial"` (`::`→`__`, `:`→`_`,
+  prefixo `on`). Registrado só via `extension.json` (não implementa uma
+  interface tipada `...Hook`, ao contrário dos outros hooks desta classe)
+  porque não confirmei o nome exato da interface PHP pra essa combinação
+  específica — se o hook não disparar, é o primeiro lugar a conferir
+  (grep por "showEditForm:initial" na versão do MediaWiki instalada).
+- `OutputPage::addBodyClasses()` — método relativamente mais novo que
+  `addModuleStyles()`; deveria existir em qualquer 1.39+, mas nunca
+  chamado nesta instalação.
 
 ## Mapa de arquivos
 
@@ -108,7 +118,8 @@ includes/
   Components/                                      8 parser tags (Fase 4) + LinkSanitizer/SegmentSplitter compartilhados
   Widgets/                                          6 widgets semânticos (Fase 5) + InfoboxBoxRenderer compartilhado
   SEO/                                               SeoInjector, SeoParserFunction, BreadcrumbBuilder (Fase 6)
-  SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (5 abas)
+  Performance/PerformanceInjector.php               preload de fontes + lazy loading (Fase 7)
+  SpecialPages/SpecialReligiowikiCustomizer.php    a página admin (6 abas)
 sql/tables.json + sql/mysql/tables-generated.sql   a única tabela (chave-valor genérica)
 resources/                                        CSS/JS servidos ao navegador
 i18n/                                              en.json (fonte), qqq.json (docs), pt-br.json

@@ -11,6 +11,7 @@ use MediaWiki\Extension\ReligiowikiCustomizer\Components\GridComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Components\QuoteComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Components\TabsComponent;
 use MediaWiki\Extension\ReligiowikiCustomizer\Homepage\HomepageRenderer;
+use MediaWiki\Extension\ReligiowikiCustomizer\Performance\PerformanceInjector;
 use MediaWiki\Extension\ReligiowikiCustomizer\SEO\BreadcrumbBuilder;
 use MediaWiki\Extension\ReligiowikiCustomizer\SEO\SeoInjector;
 use MediaWiki\Extension\ReligiowikiCustomizer\SEO\SeoParserFunction;
@@ -35,10 +36,14 @@ class HookHandler implements
 
 	/**
 	 * Adiciona os módulos de tema, CSS/JS personalizado e da biblioteca de
-	 * componentes em toda página, e injeta as tags de SEO (Fase 6) no
-	 * `<head>`. Ordem de carregamento do CSS de tema/personalizado é
-	 * garantida por getDependencies() nas classes de módulo, não pela
-	 * ordem abaixo.
+	 * componentes em toda página, injeta as tags de SEO (Fase 6) e a
+	 * config de performance (Fase 7) no `<head>`, e marca o body com a
+	 * skin ativa (`rwc-skin-<nome>`) — detecção de skin da Fase 7: robustez
+	 * básica de CSS condicional, não paridade total entre skins (o
+	 * religio-wiki está travado no Vector clássico via $wgSkipSkins, mas a
+	 * extensão em si deve funcionar em outras instalações). Ordem de
+	 * carregamento do CSS de tema/personalizado é garantida por
+	 * getDependencies() nas classes de módulo, não pela ordem abaixo.
 	 *
 	 * @inheritDoc
 	 */
@@ -55,7 +60,20 @@ class HookHandler implements
 			'ext.religiowikiCustomizer.componentsJs',
 		] );
 
+		$out->addBodyClasses( 'rwc-skin-' . $skin->getSkinName() );
+
 		SeoInjector::inject( $out );
+		PerformanceInjector::inject( $out );
+	}
+
+	/**
+	 * Recursos para editores (Fase 7): botões de inserção rápida dos
+	 * componentes/widgets acima da área de edição de wikitexto. Manipula o
+	 * textarea diretamente via JS em vez de se acoplar à API interna do
+	 * WikiEditor — mais simples e estável entre versões.
+	 */
+	public function onEditPage__showEditForm_initial( $editPage, $out ): void {
+		$out->addModules( 'ext.religiowikiCustomizer.editorToolbar' );
 	}
 
 	/**

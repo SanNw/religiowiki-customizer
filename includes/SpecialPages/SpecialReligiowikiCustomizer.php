@@ -6,22 +6,24 @@ use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\CustomCodeStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\PerformanceSettingsStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\SeoSettingsStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\ThemeSettingsStore;
 use SpecialPage;
 use Status;
 
 /**
- * Special:ReligiowikiCustomizer — cinco abas:
- *   ?tab=aparencia (Fase 1) — cores, tipografia, largura máxima.
- *   ?tab=css       (Fase 2) — CSS personalizado.
- *   ?tab=js        (Fase 2) — JS personalizado.
- *   ?tab=homepage  (Fase 3) — blocos da página principal.
- *   ?tab=seo       (Fase 6) — nome do site, descrição/imagem/Twitter padrão.
+ * Special:ReligiowikiCustomizer — seis abas:
+ *   ?tab=aparencia   (Fase 1) — cores, tipografia, largura máxima.
+ *   ?tab=css         (Fase 2) — CSS personalizado.
+ *   ?tab=js          (Fase 2) — JS personalizado.
+ *   ?tab=homepage    (Fase 3) — blocos da página principal.
+ *   ?tab=seo         (Fase 6) — nome do site, descrição/imagem/Twitter padrão.
+ *   ?tab=performance (Fase 7) — lazy loading, preload de fontes.
  *
  * Cada aba é um HTMLForm independente (token CSRF próprio, automático).
  * Não usa mais FormSpecialPage (adequado só pra um formulário) porque agora
- * há cinco, cada um com seu próprio submit — ver README da extensão.
+ * há seis, cada um com seu próprio submit — ver README da extensão.
  *
  * Permissão: restrita ao direito nativo `editinterface` (grupo sysop por
  * padrão) via SpecialPage::__construct(); SpecialPage::execute() chama
@@ -29,12 +31,13 @@ use Status;
  */
 class SpecialReligiowikiCustomizer extends SpecialPage {
 
-	private const TABS = [ 'aparencia', 'css', 'js', 'homepage', 'seo' ];
+	private const TABS = [ 'aparencia', 'css', 'js', 'homepage', 'seo', 'performance' ];
 
 	private ThemeSettingsStore $themeStore;
 	private CustomCodeStore $codeStore;
 	private HomepageConfigStore $homepageStore;
 	private SeoSettingsStore $seoStore;
+	private PerformanceSettingsStore $performanceStore;
 
 	public function __construct() {
 		parent::__construct( 'ReligiowikiCustomizer', 'editinterface' );
@@ -42,6 +45,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$this->codeStore = CustomCodeStore::newFromGlobalState();
 		$this->homepageStore = HomepageConfigStore::newFromGlobalState();
 		$this->seoStore = SeoSettingsStore::newFromGlobalState();
+		$this->performanceStore = PerformanceSettingsStore::newFromGlobalState();
 	}
 
 	/** @inheritDoc */
@@ -88,6 +92,9 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			case 'seo':
 				$this->showSeoForm();
 				break;
+			case 'performance':
+				$this->showPerformanceForm();
+				break;
 			default:
 				$this->showThemeForm();
 		}
@@ -102,6 +109,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			'js' => 'religiowikicustomizer-tab-js',
 			'homepage' => 'religiowikicustomizer-tab-homepage',
 			'seo' => 'religiowikicustomizer-tab-seo',
+			'performance' => 'religiowikicustomizer-tab-performance',
 		];
 		foreach ( $labels as $tab => $msgKey ) {
 			$class = $tab === $activeTab ? 'religiowikicustomizer-tab religiowikicustomizer-tab-active'
@@ -498,6 +506,48 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 	public function onSubmitSeo( array $data ) {
 		$this->seoStore->saveSettings( $data, $this->getUser()->getActorId() );
 		$this->logChange( 'saveseo' );
+		return Status::newGood();
+	}
+
+	// ---------- Aba Performance (Fase 7) ----------
+
+	private function showPerformanceForm(): void {
+		$current = $this->performanceStore->getSettings();
+
+		$fields = [
+			'lazyLoadImages' => [
+				'type' => 'check',
+				'label-message' => 'religiowikicustomizer-performance-lazyimages',
+				'default' => $current['lazyLoadImages'],
+			],
+			'preloadFontsText' => [
+				'type' => 'textarea',
+				'rows' => 4,
+				'label-message' => 'religiowikicustomizer-performance-preloadfonts',
+				'help-message' => 'religiowikicustomizer-performance-preloadfonts-help',
+				'default' => $current['preloadFontsText'],
+			],
+		];
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-performance' );
+		$form->addHiddenField( 'tab', 'performance' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-save' );
+		$form->setSubmitCallback( [ $this, 'onSubmitPerformance' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
+		}
+	}
+
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitPerformance( array $data ) {
+		$this->performanceStore->saveSettings( $data, $this->getUser()->getActorId() );
+		$this->logChange( 'saveperformance' );
 		return Status::newGood();
 	}
 

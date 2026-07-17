@@ -90,5 +90,10 @@
 	"religiowikicustomizer-seo-twitter": "Usuário do Twitter/X (com ou sem @)",
 	"religiowikicustomizer-seo-help": "Meta description por página: adicione <code><nowiki>{{#rwseo:description|Texto customizado para este artigo}}</nowiki></code> em qualquer lugar do wikitexto do artigo.",
 	"religiowikicustomizer-breadcrumb-home": "Início",
-	"logentry-religiowikicustomizer-saveseo": "$1 atualizou a configuração de SEO"
+	"logentry-religiowikicustomizer-saveseo": "$1 atualizou a configuração de SEO",
+	"religiowikicustomizer-tab-performance": "Performance",
+	"religiowikicustomizer-performance-lazyimages": "Habilitar lazy loading nativo (loading=\"lazy\") nas imagens dos artigos",
+	"religiowikicustomizer-performance-preloadfonts": "URLs de fontes pra pré-carregar (uma por linha)",
+	"religiowikicustomizer-performance-preloadfonts-help": "Adiciona <code>&lt;link rel=preload as=font&gt;</code> pra cada URL — só URLs http(s) são usadas.",
+	"logentry-religiowikicustomizer-saveperformance": "$1 atualizou a configuração de performance"
 }

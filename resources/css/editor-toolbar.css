@@ -1,0 +1,19 @@
+#rwc-editor-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	margin-bottom: 6px;
+}
+
+#rwc-editor-toolbar button {
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 4px;
+	padding: 4px 10px;
+	font-size: 0.85em;
+	cursor: pointer;
+}
+
+#rwc-editor-toolbar button:hover {
+	background: var( --rw-background, #FBF3E1 );
+}

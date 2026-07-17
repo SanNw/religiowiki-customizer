@@ -90,5 +90,10 @@
 	"religiowikicustomizer-seo-twitter": "Label for the Twitter/X handle field, used in the twitter:site meta tag.",
 	"religiowikicustomizer-seo-help": "Help text explaining the {{#rwseo:description|...}} parser function for per-page meta description override. Contains <nowiki> and <code>, parsed as wikitext.",
 	"religiowikicustomizer-breadcrumb-home": "Label of the \"Home\" link in the breadcrumb trail shown above articles.",
-	"logentry-religiowikicustomizer-saveseo": "Log entry shown when an admin saves the SEO settings form. $1 is the performer's user link."
+	"logentry-religiowikicustomizer-saveseo": "Log entry shown when an admin saves the SEO settings form. $1 is the performer's user link.",
+	"religiowikicustomizer-tab-performance": "Tab label for the Fase 7 performance settings.",
+	"religiowikicustomizer-performance-lazyimages": "Checkbox label to enable native browser lazy loading on article images.",
+	"religiowikicustomizer-performance-preloadfonts": "Label for the newline-separated list of font URLs to preload.",
+	"religiowikicustomizer-performance-preloadfonts-help": "Help text explaining the preload-fonts field. Contains <code>, parsed as wikitext.",
+	"logentry-religiowikicustomizer-saveperformance": "Log entry shown when an admin saves the performance settings form. $1 is the performer's user link."
 }

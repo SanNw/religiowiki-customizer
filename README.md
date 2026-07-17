@@ -7,7 +7,7 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1 a 6 concluídas
+## Status: Fases 1 a 7 concluídas
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -67,6 +67,19 @@ baseados na primeira categoria do artigo, prependidos ao conteúdo em
 qualquer página do namespace principal (exceto a Main Page).
 `maintenance/generateSitemap.php` gera `sitemap.xml` (agendável via cron,
 não sob demanda).
+
+**Fase 7** — Performance, detecção de skin, recursos para editores: aba
+`?tab=performance` (lazy loading nativo de imagens, preload de fontes via
+`<link rel=preload>`) — sem sistema de build próprio, só recursos nativos
+do navegador + o cache/minificação que o ResourceLoader já faz sozinho.
+Detecção de skin: classe `rwc-skin-<nome>` no `<body>` via
+`OutputPage::addBodyClasses()`, robustez básica (não quebrar em outra
+skin), não paridade total — o religio-wiki está travado no Vector clássico
+mesmo, isso é pra portabilidade da extensão em geral. Recursos para
+editores: barra de botões acima da área de edição de wikitexto (só no
+editor de código-fonte) que insere os componentes/widgets no cursor —
+manipula o textarea diretamente, sem se acoplar à API interna do
+WikiEditor.
 
 ### Como funciona
 
