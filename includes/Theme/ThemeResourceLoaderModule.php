@@ -38,4 +38,20 @@ class ThemeResourceLoaderModule extends Module {
 	public function enableModuleContentVersion() {
 		return true;
 	}
+
+	/**
+	 * Module::getType() tem padrão LOAD_GENERAL -- sem sobrescrever isso,
+	 * este módulo (adicionado via addModuleStyles em HookHandler) nunca
+	 * entrava de fato no <link rel=stylesheet> combinado da página real
+	 * (confirmado ao vivo: presente e correto quando pedido isoladamente
+	 * via load.php, mas ausente do HTML de qualquer página normal do
+	 * wiki). Na prática, isso significava que a cor configurada no painel
+	 * admin nunca chegava no site -- só o valor de fallback de cada
+	 * var(--rw-*, fallback) no CSS, que por acaso bate com o tema padrão.
+	 *
+	 * @inheritDoc
+	 */
+	public function getType() {
+		return self::LOAD_STYLES;
+	}
 }

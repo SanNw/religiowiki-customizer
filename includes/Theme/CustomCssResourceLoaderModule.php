@@ -38,4 +38,17 @@ class CustomCssResourceLoaderModule extends Module {
 	public function enableModuleContentVersion() {
 		return true;
 	}
+
+	/**
+	 * Mesmo problema do ThemeResourceLoaderModule (ver comentário lá):
+	 * Module::getType() tem padrão LOAD_GENERAL, e sem sobrescrever isso
+	 * este módulo (adicionado via addModuleStyles) nunca entrava no <link
+	 * rel=stylesheet> combinado de verdade -- o CSS personalizado salvo em
+	 * Special:ReligiowikiCustomizer nunca chegava a aparecer no site.
+	 *
+	 * @inheritDoc
+	 */
+	public function getType() {
+		return self::LOAD_STYLES;
+	}
 }
