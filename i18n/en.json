@@ -95,5 +95,15 @@
 	"religiowikicustomizer-performance-lazyimages": "Enable native lazy loading (loading=\"lazy\") on article images",
 	"religiowikicustomizer-performance-preloadfonts": "Font URLs to preload (one per line)",
 	"religiowikicustomizer-performance-preloadfonts-help": "Adds <code>&lt;link rel=preload as=font&gt;</code> for each URL — only http(s) URLs are used.",
-	"logentry-religiowikicustomizer-saveperformance": "$1 updated the performance settings"
+	"logentry-religiowikicustomizer-saveperformance": "$1 updated the performance settings",
+	"religiowikicustomizer-tab-exportimport": "Export/Import",
+	"religiowikicustomizer-export-label": "Current configuration (JSON) — copy this to back it up",
+	"religiowikicustomizer-import-label": "Paste configuration JSON to import",
+	"religiowikicustomizer-import-confirm": "I understand this will REPLACE the current configuration (theme, custom CSS/JS, homepage)",
+	"religiowikicustomizer-import-submit": "Import",
+	"religiowikicustomizer-exportimport-help": "Importing overwrites theme, custom CSS/JS and homepage configuration after an automatic backup of the current state (kept in the database, not shown here — see the extension's README for how to recover it manually if needed).",
+	"religiowikicustomizer-import-done": "Configuration imported. A backup of the previous configuration was saved automatically.",
+	"religiowikicustomizer-import-notconfirmed": "You must check the confirmation box before importing.",
+	"religiowikicustomizer-import-invalidjson": "That doesn't look like valid JSON.",
+	"logentry-religiowikicustomizer-import": "$1 imported a full configuration (theme, custom CSS/JS, homepage)"
 }

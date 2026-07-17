@@ -15,7 +15,11 @@ README (instalação/uso) nem o prompt mestre das 8 fases — é só um mapa.
 | 5. Widgets semânticos | ✅ Feita | `<rwinfobox>`, `<rwbook>`, `<rwauthor>`, `<rwreligion>`, `<rwschool>`, `<rwtimeline>` — ver `docs/WIDGETS.md`. Citação reaproveita `<rwquote>`; Mapa documentado como pendência (não implementado) |
 | 6. SEO | ✅ Feita | Meta description/OG/Twitter/canonical/robots/JSON-LD, `{{#rwseo:description\|...}}`, breadcrumbs, `maintenance/generateSitemap.php` |
 | 7. Performance/skin | ✅ Feita | Lazy loading nativo, preload de fontes, classe `rwc-skin-*` no body, barra de inserção rápida no editor |
-| 8. API REST/testes | ⬜ Não iniciada | Endpoints REST, export/import, PHPUnit |
+| 8. API REST/testes | ✅ Feita | 4 endpoints REST, aba Exportar/Importar com backup automático, testes PHPUnit (unit + integração) |
+
+**Todas as 8 fases do prompt mestre estão implementadas.** "Implementadas"
+não significa "testadas contra um MediaWiki real" — ver a seção abaixo,
+ela vale pra extensão inteira, não só pras fases mais recentes.
 
 ## ⚠️ Nunca testado contra um MediaWiki real
 
@@ -97,6 +101,22 @@ de escrever mais código em cima.
 - `OutputPage::addBodyClasses()` — método relativamente mais novo que
   `addModuleStyles()`; deveria existir em qualquer 1.39+, mas nunca
   chamado nesta instalação.
+- **REST API (Fase 8) é a parte com MAIS incerteza de toda a extensão.**
+  `MediaWiki\Rest\SimpleHandler`, `getAuthority()`, `getSession()->getUser()`,
+  `JsonBodyValidator`, o registro via `"RestRoutes"` no `extension.json` —
+  tudo isso é escrito seguindo a documentação oficial do framework REST do
+  core, mas nunca foi exercitado contra um MediaWiki de verdade nem contra
+  outra versão do framework. Se `Special:Version`/`update.php` passarem
+  mas uma chamada `curl` pra `/rest.php/religiowikicustomizer/v0/theme`
+  der erro, comece por aqui — especificamente confira se `getAuthority()`
+  e `getSession()` existem como métodos de `SimpleHandler` na versão
+  instalada (podem ter mudado de nome/assinatura entre versões do core).
+- Nenhum teste PHPUnit foi de fato EXECUTADO — todos passaram só por
+  `php -l` (sintaxe). Os testes unit (`ThemeCssGeneratorTest`,
+  `SegmentSplitterTest`) são as maiores chances de passar de primeira,
+  já que não dependem de bootstrap do MediaWiki. Os de integração
+  (`LinkSanitizerTest`, `ConfigExporterTest`) são os que mais precisam de
+  atenção na primeira rodada real.
 
 ## Mapa de arquivos
 
@@ -125,8 +145,12 @@ resources/                                        CSS/JS servidos ao navegador
 i18n/                                              en.json (fonte), qqq.json (docs), pt-br.json
 maintenance/generateConvenienceTemplates.php      gera Template:Infobox religião etc. (Fase 5)
 maintenance/generateSitemap.php                   gera sitemap.xml (Fase 6, agendável via cron)
+tests/phpunit/unit/                               testes sem banco (rodam rápido, sem bootstrap completo)
+tests/phpunit/integration/                        testes com banco (@group Database, bootstrap completo)
 docs/COMPONENTS.md                                sintaxe de uso de cada parser tag (pra editores, não só devs)
 docs/WIDGETS.md                                   sintaxe de uso de cada widget semântico
+docs/ADMIN_GUIDE.md                               como usar cada aba do painel, dia a dia
+docs/DEVELOPER_GUIDE.md                           arquitetura e como estender (nova Store, novo componente, novo bloco)
 ```
 
 Tudo fica em **uma tabela só** (`religiowiki_customizer_settings`,

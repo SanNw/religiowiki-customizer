@@ -4,6 +4,7 @@ namespace MediaWiki\Extension\ReligiowikiCustomizer\SpecialPages;
 
 use HTMLForm;
 use ManualLogEntry;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\ConfigExporter;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\CustomCodeStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\PerformanceSettingsStore;
@@ -13,17 +14,18 @@ use SpecialPage;
 use Status;
 
 /**
- * Special:ReligiowikiCustomizer — seis abas:
- *   ?tab=aparencia   (Fase 1) — cores, tipografia, largura máxima.
- *   ?tab=css         (Fase 2) — CSS personalizado.
- *   ?tab=js          (Fase 2) — JS personalizado.
- *   ?tab=homepage    (Fase 3) — blocos da página principal.
- *   ?tab=seo         (Fase 6) — nome do site, descrição/imagem/Twitter padrão.
- *   ?tab=performance (Fase 7) — lazy loading, preload de fontes.
+ * Special:ReligiowikiCustomizer — sete abas:
+ *   ?tab=aparencia    (Fase 1) — cores, tipografia, largura máxima.
+ *   ?tab=css          (Fase 2) — CSS personalizado.
+ *   ?tab=js           (Fase 2) — JS personalizado.
+ *   ?tab=homepage     (Fase 3) — blocos da página principal.
+ *   ?tab=seo          (Fase 6) — nome do site, descrição/imagem/Twitter padrão.
+ *   ?tab=performance  (Fase 7) — lazy loading, preload de fontes.
+ *   ?tab=exportimport (Fase 8) — exportar/importar toda a configuração.
  *
  * Cada aba é um HTMLForm independente (token CSRF próprio, automático).
  * Não usa mais FormSpecialPage (adequado só pra um formulário) porque agora
- * há seis, cada um com seu próprio submit — ver README da extensão.
+ * há sete, cada um com seu próprio submit — ver README da extensão.
  *
  * Permissão: restrita ao direito nativo `editinterface` (grupo sysop por
  * padrão) via SpecialPage::__construct(); SpecialPage::execute() chama
@@ -31,7 +33,7 @@ use Status;
  */
 class SpecialReligiowikiCustomizer extends SpecialPage {
 
-	private const TABS = [ 'aparencia', 'css', 'js', 'homepage', 'seo', 'performance' ];
+	private const TABS = [ 'aparencia', 'css', 'js', 'homepage', 'seo', 'performance', 'exportimport' ];
 
 	private ThemeSettingsStore $themeStore;
 	private CustomCodeStore $codeStore;
@@ -95,6 +97,9 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			case 'performance':
 				$this->showPerformanceForm();
 				break;
+			case 'exportimport':
+				$this->showExportImportForm();
+				break;
 			default:
 				$this->showThemeForm();
 		}
@@ -110,6 +115,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 			'homepage' => 'religiowikicustomizer-tab-homepage',
 			'seo' => 'religiowikicustomizer-tab-seo',
 			'performance' => 'religiowikicustomizer-tab-performance',
+			'exportimport' => 'religiowikicustomizer-tab-exportimport',
 		];
 		foreach ( $labels as $tab => $msgKey ) {
 			$class = $tab === $activeTab ? 'religiowikicustomizer-tab religiowikicustomizer-tab-active'
@@ -548,6 +554,65 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 	public function onSubmitPerformance( array $data ) {
 		$this->performanceStore->saveSettings( $data, $this->getUser()->getActorId() );
 		$this->logChange( 'saveperformance' );
+		return Status::newGood();
+	}
+
+	// ---------- Aba Exportar/Importar (Fase 8) ----------
+
+	private function showExportImportForm(): void {
+		$exportJson = json_encode( ConfigExporter::exportAll(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE );
+
+		$fields = [
+			'exportJson' => [
+				'type' => 'textarea',
+				'rows' => 10,
+				'label-message' => 'religiowikicustomizer-export-label',
+				'default' => $exportJson,
+				'readonly' => true,
+				'cssclass' => 'religiowikicustomizer-code-editor',
+			],
+			'importJson' => [
+				'type' => 'textarea',
+				'rows' => 10,
+				'label-message' => 'religiowikicustomizer-import-label',
+				'default' => '',
+				'cssclass' => 'religiowikicustomizer-code-editor',
+			],
+			'importConfirm' => [
+				'type' => 'check',
+				'label-message' => 'religiowikicustomizer-import-confirm',
+			],
+		];
+
+		$form = HTMLForm::factory( 'ooui', $fields, $this->getContext() );
+		$form->setId( 'religiowikicustomizer-form-exportimport' );
+		$form->addHiddenField( 'tab', 'exportimport' );
+		$form->setSubmitTextMsg( 'religiowikicustomizer-import-submit' );
+		$form->addPreText( $this->msg( 'religiowikicustomizer-exportimport-help' )->parseAsBlock() );
+		$form->setSubmitCallback( [ $this, 'onSubmitExportImport' ] );
+
+		$result = $form->show();
+		if ( $result === true ) {
+			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-import-done' );
+		}
+	}
+
+	/**
+	 * @param array $data
+	 * @return Status
+	 */
+	public function onSubmitExportImport( array $data ) {
+		if ( empty( $data['importConfirm'] ) ) {
+			return Status::newFatal( 'religiowikicustomizer-import-notconfirmed' );
+		}
+
+		$config = json_decode( (string)( $data['importJson'] ?? '' ), true );
+		if ( !is_array( $config ) ) {
+			return Status::newFatal( 'religiowikicustomizer-import-invalidjson' );
+		}
+
+		ConfigExporter::importAll( $config, $this->getUser()->getActorId() );
+		$this->logChange( 'import' );
 		return Status::newGood();
 	}
 

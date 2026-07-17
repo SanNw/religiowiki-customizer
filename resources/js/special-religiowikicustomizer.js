@@ -79,9 +79,27 @@
 		} );
 	}
 
+	function wireImportConfirm() {
+		var form = document.getElementById( 'religiowikicustomizer-form-exportimport' );
+		if ( !form ) {
+			return;
+		}
+		form.addEventListener( 'submit', function ( e ) {
+			// "Modal de aviso" antes de importar (Fase 8) — confirm()
+			// nativo, sem dependência nova só pra isso.
+			if ( !window.confirm(
+				'Isso vai SUBSTITUIR toda a configuração atual (tema, CSS/JS, homepage). ' +
+				'Um backup automático é feito antes, mas confirme que é isso que você quer.'
+			) ) {
+				e.preventDefault();
+			}
+		} );
+	}
+
 	function mount() {
 		wireThemeLivePreview();
 		wireCssPreview();
+		wireImportConfirm();
 		wireJsPreview();
 	}
 

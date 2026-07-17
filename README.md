@@ -7,7 +7,13 @@ tipografia, largura), CSS/JS personalizado (Fase 2), homepage builder (Fase
 skin (Fase 7) e API REST/exportação (Fase 8). Implementação em fases — ver
 `docs/` conforme forem sendo concluídas.
 
-## Status: Fases 1 a 7 concluídas
+## Status: as 8 fases planejadas concluídas
+
+Guias completos: [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) (como usar
+cada aba do painel) e [`docs/DEVELOPER_GUIDE.md`](docs/DEVELOPER_GUIDE.md)
+(arquitetura, como estender). `docs/STATUS.md` lista riscos conhecidos e
+pontos nunca testados contra um MediaWiki de verdade — leia antes de
+assumir que algo "deveria simplesmente funcionar".
 
 **Fase 1** — Fundação: estrutura da extensão, tabela de configuração,
 geração de CSS a partir de tokens salvos no banco, e
@@ -81,6 +87,21 @@ editor de código-fonte) que insere os componentes/widgets no cursor —
 manipula o textarea diretamente, sem se acoplar à API interna do
 WikiEditor.
 
+**Fase 8** — API REST, exportação/importação e testes: 4 endpoints REST
+(`GET`/`PUT /religiowikicustomizer/v0/theme`, `GET
+/religiowikicustomizer/v0/export`, `PUT /religiowikicustomizer/v0/import`)
+usando o framework REST do core (`MediaWiki\Rest\SimpleHandler`), não a
+API legada. Leitura de tema é **pública** (já é visível no CSS de toda
+página); leitura de export e toda escrita exigem `editinterface` **e**
+token CSRF, sem exceção. Aba `?tab=exportimport`: exporta toda a
+configuração (tema, CSS/JS, homepage) como JSON, importa com confirmação
+explícita (checkbox + `confirm()` no navegador) e backup automático
+versionado antes de qualquer sobrescrita. Testes PHPUnit priorizando os
+módulos de maior risco: geração de CSS (unit, `tests/phpunit/unit/`) e
+sanitização de link/export-import (integração, `tests/phpunit/integration/`
+— **nunca executados** neste ambiente, sem MediaWiki instalado pra rodar
+contra; ver `docs/STATUS.md`).
+
 ### Como funciona
 
 - Configuração fica em `religiowiki_customizer_settings` (uma linha por
@@ -124,11 +145,42 @@ WikiEditor.
 4. Acesse `Special:ReligiowikiCustomizer` logado como um usuário com o
    direito `editinterface` (grupo `sysop` por padrão).
 
+### Atualização (guia de atualização)
+
+Depois de puxar uma versão nova do repositório (`git pull` na pasta da
+extensão, ou rebuild da imagem Docker no caso do religio-wiki):
+
+1. Rode `php maintenance/update.php` de novo — cria/ajusta tabelas se a
+   versão nova precisar (idempotente, seguro rodar mesmo sem mudança de
+   schema).
+2. Se a versão nova mexeu em templates de conveniência (Fase 5), rode
+   também `php maintenance/generateConvenienceTemplates.php`.
+3. Confira `Special:Version` pra garantir que a extensão carregou sem
+   erro fatal antes de considerar a atualização concluída.
+
+Nenhuma migração de dado é necessária entre fases — a tabela
+`religiowiki_customizer_settings` é a mesma desde a Fase 1, cada fase só
+acrescenta uma chave nova.
+
+### Testes
+
+```bash
+php tests/phpunit/phpunit.php extensions/ReligiowikiCustomizer/tests/phpunit/
+```
+(rodar de dentro da raiz de uma instalação MediaWiki real — não funciona
+como `phpunit` isolado, os testes de integração precisam do bootstrap
+completo do core). Ver `docs/STATUS.md` pra saber quais testes são unit
+(rodam rápido, sem banco) e quais são integração (mais lentos, tocam
+banco de verdade).
+
 ### Permissão
 
 Restrita ao direito nativo `editinterface` — não é criado nenhum grupo ou
 direito novo; qualquer conta no grupo `sysop` (ou explicitamente concedida
-`editinterface`) já acessa.
+`editinterface`) já acessa. Os parser tags de componentes/widgets (Fases
+4-5) são a exceção deliberada: qualquer conta no grupo `editor` pode
+usá-los em wikitext, não só `sysop` — ver "Modelo de ameaça" em
+`docs/COMPONENTS.md`.
 
 ### Requisitos
 

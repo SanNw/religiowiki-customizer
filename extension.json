@@ -1,6 +1,6 @@
 {
 	"name": "ReligiowikiCustomizer",
-	"version": "1.0.0-phase7",
+	"version": "1.0.0-phase8",
 	"author": [ "SanNw" ],
 	"url": "https://github.com/SanNw/religiowiki-customizer",
 	"descriptionmsg": "religiowikicustomizer-desc",
@@ -81,6 +81,28 @@
 		}
 	},
 	"LogTypes": [ "religiowikicustomizer" ],
+	"RestRoutes": [
+		{
+			"path": "/religiowikicustomizer/v0/theme",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Api\\GetThemeHandler"
+		},
+		{
+			"path": "/religiowikicustomizer/v0/theme",
+			"method": "PUT",
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Api\\SaveThemeHandler"
+		},
+		{
+			"path": "/religiowikicustomizer/v0/export",
+			"method": "GET",
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Api\\ExportConfigHandler"
+		},
+		{
+			"path": "/religiowikicustomizer/v0/import",
+			"method": "PUT",
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\Api\\ImportConfigHandler"
+		}
+	],
 	"ResourceFileModulePaths": {
 		"localBasePath": "",
 		"remoteExtPath": "ReligiowikiCustomizer"

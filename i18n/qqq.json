@@ -95,5 +95,15 @@
 	"religiowikicustomizer-performance-lazyimages": "Checkbox label to enable native browser lazy loading on article images.",
 	"religiowikicustomizer-performance-preloadfonts": "Label for the newline-separated list of font URLs to preload.",
 	"religiowikicustomizer-performance-preloadfonts-help": "Help text explaining the preload-fonts field. Contains <code>, parsed as wikitext.",
-	"logentry-religiowikicustomizer-saveperformance": "Log entry shown when an admin saves the performance settings form. $1 is the performer's user link."
+	"logentry-religiowikicustomizer-saveperformance": "Log entry shown when an admin saves the performance settings form. $1 is the performer's user link.",
+	"religiowikicustomizer-tab-exportimport": "Tab label for the Fase 8 export/import form.",
+	"religiowikicustomizer-export-label": "Label for the read-only textarea showing the current full configuration as JSON.",
+	"religiowikicustomizer-import-label": "Label for the textarea where an admin pastes JSON to import.",
+	"religiowikicustomizer-import-confirm": "Checkbox label the admin must tick before the import form can be submitted.",
+	"religiowikicustomizer-import-submit": "Submit button label for the import form.",
+	"religiowikicustomizer-exportimport-help": "Help text explaining the export/import tab's backup behavior.",
+	"religiowikicustomizer-import-done": "Success message shown after a configuration import.",
+	"religiowikicustomizer-import-notconfirmed": "Error shown when submitting the import form without ticking the confirmation checkbox.",
+	"religiowikicustomizer-import-invalidjson": "Error shown when the pasted import text isn't valid JSON.",
+	"logentry-religiowikicustomizer-import": "Log entry shown when an admin imports a full configuration. $1 is the performer's user link."
 }
