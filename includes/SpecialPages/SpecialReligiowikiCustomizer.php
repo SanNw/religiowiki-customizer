@@ -184,7 +184,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitTheme' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -246,7 +246,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitCss' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -296,7 +296,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitJs' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -432,7 +432,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitHomepage' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -500,7 +500,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitSeo' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -542,7 +542,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitPerformance' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-saved' );
 		}
 	}
@@ -592,7 +592,7 @@ class SpecialReligiowikiCustomizer extends SpecialPage {
 		$form->setSubmitCallback( [ $this, 'onSubmitExportImport' ] );
 
 		$result = $form->show();
-		if ( $result === true ) {
+		if ( $result === true || ( $result instanceof Status && $result->isGood() ) ) {
 			$this->getOutput()->addWikiMsg( 'religiowikicustomizer-import-done' );
 		}
 	}
