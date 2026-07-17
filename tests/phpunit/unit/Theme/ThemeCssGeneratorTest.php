@@ -55,6 +55,29 @@ class ThemeCssGeneratorTest extends MediaWikiUnitTestCase {
 		$this->assertStringContainsString( '--rw-link: var(--rw-primary);', $css );
 	}
 
+	/**
+	 * --rw-background/--rw-surface/--rw-primary são valores únicos (sem
+	 * isso, ficavam presos na cor clara em qualquer tema, já que — ao
+	 * contrário de --rw-bg/--rw-bg-elevated/--rw-link — não tinham
+	 * variante escura/personalizada em lugar nenhum).
+	 */
+	public function testEmitsDarkAndCustomThemeOverridesForNewCanonicalNames(): void {
+		$css = ThemeCssGenerator::generate( [] );
+
+		$this->assertStringContainsString( ':root[data-theme="dark"]', $css );
+		$this->assertStringContainsString( ':root[data-theme="custom"]', $css );
+
+		$darkBlock = substr( $css, strpos( $css, ':root[data-theme="dark"]' ) );
+		$this->assertStringContainsString( '--rw-primary: #E0A868;', $darkBlock );
+		$this->assertStringContainsString( '--rw-background: #1B1712;', $darkBlock );
+		$this->assertStringContainsString( '--rw-surface: #24201A;', $darkBlock );
+
+		$customBlock = substr( $css, strpos( $css, ':root[data-theme="custom"]' ) );
+		$this->assertStringContainsString( '--rw-primary: var(--rw-custom-link, #92400E);', $customBlock );
+		$this->assertStringContainsString( '--rw-background: var(--rw-custom-bg, #FBF3E1);', $customBlock );
+		$this->assertStringContainsString( '--rw-surface: var(--rw-custom-bg-elevated, #FFFDF7);', $customBlock );
+	}
+
 	public function testMissingKeysFallBackToDefaultsInsteadOfBreaking(): void {
 		$css = ThemeCssGenerator::generate( [] );
 
@@ -72,9 +95,11 @@ class ThemeCssGeneratorTest extends MediaWikiUnitTestCase {
 			'primary' => '#111} body { display:none} :root{--x:1',
 		] );
 
-		// Só a estrutura legítima (":root { ... }") deve ter chaves — se
-		// um valor injetado sobrevivesse à sanitização, esse count subiria.
-		$this->assertSame( 1, substr_count( $css, '{' ) );
-		$this->assertSame( 1, substr_count( $css, '}' ) );
+		// Só a estrutura legítima (":root {...}", ":root[data-theme=dark]
+		// {...}" e ":root[data-theme=custom] {...}") deve ter chaves — se
+		// um valor injetado sobrevivesse à sanitização, esse count subiria
+		// além dos 3 pares esperados.
+		$this->assertSame( 3, substr_count( $css, '{' ) );
+		$this->assertSame( 3, substr_count( $css, '}' ) );
 	}
 }

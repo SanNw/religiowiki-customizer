@@ -40,6 +40,33 @@ class ThemeCssGenerator {
 		$css .= "\t--rw-link: var(--rw-primary);\n";
 		$css .= "}\n";
 
+		// --rw-background/--rw-surface/--rw-primary são valores únicos,
+		// configurados pelo admin, sem variante por tema -- diferente de
+		// --rw-bg/--rw-bg-elevated/--rw-link (nomes antigos, mesma coisa via
+		// alias acima), que já têm dark mode próprio hardcoded em
+		// mediawiki-config/common.css. Sem isso, qualquer CSS que use os
+		// nomes novos diretamente (ex.: Homepage Builder) ficava preso na
+		// cor clara em qualquer tema. Usa a mesma paleta escura já
+		// estabelecida em common.css pros nomes antigos -- não inventa cor
+		// nova, só estende a mesma pros nomes novos. --rw-text/--rw-text-
+		// muted/--rw-border usam o mesmo nome nos dois sistemas, então já
+		// funcionam via common.css sem precisar repetir aqui.
+		$css .= "\n:root[data-theme=\"dark\"] {\n";
+		$css .= "\t--rw-primary: #E0A868;\n";
+		$css .= "\t--rw-background: #1B1712;\n";
+		$css .= "\t--rw-surface: #24201A;\n";
+		$css .= "}\n";
+
+		// Mesma lacuna no tema "personalizado" (leitor escolhe fundo/texto/
+		// link via o pop-up de tema em common.js) -- espelha exatamente os
+		// mesmos --rw-custom-* e fallbacks que common.css já usa pros nomes
+		// antigos, só estendendo pros nomes novos.
+		$css .= "\n:root[data-theme=\"custom\"] {\n";
+		$css .= "\t--rw-primary: var(--rw-custom-link, #92400E);\n";
+		$css .= "\t--rw-background: var(--rw-custom-bg, #FBF3E1);\n";
+		$css .= "\t--rw-surface: var(--rw-custom-bg-elevated, #FFFDF7);\n";
+		$css .= "}\n";
+
 		return $css;
 	}
 
