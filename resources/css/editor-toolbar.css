@@ -17,3 +17,62 @@
 #rwc-editor-toolbar button:hover {
 	background: var( --rw-background, #FBF3E1 );
 }
+
+/* Grupos rotulados (Formatação / Componentes / Ajuda). */
+.rwc-editor-group {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+}
+.rwc-editor-group-label {
+	font-size: 0.72em;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var( --rw-text-muted, #5C5142 );
+	margin-right: 2px;
+}
+.rwc-editor-help-toggle {
+	font-weight: 600;
+}
+
+/* Guia rápido "Ajuda de formatação". */
+#rwc-editor-help {
+	margin: 0 0 8px;
+	padding: 10px 12px;
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 4px;
+}
+#rwc-editor-help[hidden] {
+	display: none;
+}
+.rwc-editor-help-intro {
+	margin: 0 0 8px;
+	font-size: 0.85em;
+	color: var( --rw-text-muted, #5C5142 );
+}
+.rwc-editor-help-table {
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 0.85em;
+}
+.rwc-editor-help-table td {
+	padding: 3px 8px 3px 0;
+	vertical-align: top;
+	border-top: 1px solid var( --rw-border, #E2D5B8 );
+}
+.rwc-editor-help-table code {
+	background: var( --rw-background, #FBF3E1 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 3px;
+	padding: 1px 5px;
+	white-space: nowrap;
+}
+
+@media ( max-width: 600px ) {
+	.rwc-editor-help-table code {
+		white-space: normal;
+		word-break: break-word;
+	}
+}
