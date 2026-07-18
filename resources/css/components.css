@@ -181,4 +181,17 @@
 	.rwc-grid {
 		grid-template-columns: 1fr;
 	}
+	/* Alvos de toque maiores nos componentes interativos. */
+	.rwc-accordion-toggle { padding: 0.9em 1em; }
+	.rwc-tabs-tab { padding: 0.7em 1em; }
+	/* A navegação de abas rola na horizontal em vez de estourar a largura. */
+	.rwc-tabs-nav {
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+	}
+	.rwc-tabs-tab {
+		flex: 0 0 auto;
+		white-space: nowrap;
+	}
 }

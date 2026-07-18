@@ -75,4 +75,11 @@
 		white-space: normal;
 		word-break: break-word;
 	}
+	/* Botões da barra de edição maiores e mais fáceis de tocar no mobile. */
+	#rwc-editor-toolbar { gap: 6px; }
+	#rwc-editor-toolbar button {
+		padding: 8px 12px;
+		font-size: 0.9em;
+		min-height: 40px;
+	}
 }
