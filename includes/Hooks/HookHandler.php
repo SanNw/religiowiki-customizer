@@ -200,9 +200,13 @@ class HookHandler implements
 			'religiowiki_customizer_settings',
 			$dir . '/mysql/tables-generated.sql'
 		);
+		// rwc_page_views usa um patch SÓ com ela — não tables-generated.sql (que
+		// tem as duas tabelas). Numa instalação onde a settings já existe, rodar
+		// o arquivo com as duas tentaria recriá-la e abortava com "Error 1050:
+		// Table already exists". Ver comentário no próprio patch.
 		$updater->addExtensionTable(
 			'rwc_page_views',
-			$dir . '/mysql/tables-generated.sql'
+			$dir . '/mysql/patch-rwc_page_views.sql'
 		);
 	}
 }
