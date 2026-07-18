@@ -23,12 +23,17 @@ class HomepageConfigStore {
 
 	/**
 	 * @var array<string,array<string,mixed>> Um bloco por tipo, na ordem
-	 *   padrão, todos habilitados com conteúdo de exemplo mínimo.
+	 *   padrão. Todos DESABILITADOS por padrão: com nenhum bloco habilitado,
+	 *   onOutputPageBeforeHTML não sequestra a Main Page e o wikitext da
+	 *   página "Página principal" (que reproduz o design do Figma) é exibido
+	 *   — o "página wiki como fallback" da arquitetura da Fase 3. O admin liga
+	 *   os blocos que quiser em Special:ReligiowikiCustomizer se preferir usar
+	 *   o Homepage Builder em vez do wikitext.
 	 */
 	public const DEFAULTS = [
 		'hero' => [
 			'type' => 'hero',
-			'enabled' => true,
+			'enabled' => false,
 			'order' => 1,
 			'title' => 'Boas-vindas à Religio Wiki',
 			'subtitle' => 'a enciclopédia autêntica sobre as religiões',
@@ -44,14 +49,14 @@ class HomepageConfigStore {
 		],
 		'featured' => [
 			'type' => 'featured',
-			'enabled' => true,
+			'enabled' => false,
 			'order' => 3,
 			'mode' => 'manual',
 			'pagesJson' => '["Cristianismo"]',
 		],
 		'categories' => [
 			'type' => 'categories',
-			'enabled' => true,
+			'enabled' => false,
 			'order' => 4,
 			'categoriesJson' => '["I. Xamanismos Hiperbóreos","II. Mitologias Arianas","III. Monoteísmos Semíticos"]',
 		],
