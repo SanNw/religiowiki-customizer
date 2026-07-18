@@ -98,3 +98,14 @@
 	border-radius: 4px;
 	background: var( --rw-background, #FBF3E1 );
 }
+
+/* Mobile: os grids já são responsivos (auto-fit minmax); aqui só respiro no
+   hero e valores um pouco menores pra caber bem no celular. */
+@media ( max-width: 600px ) {
+	.religiowikicustomizer-hero { padding: 1.4em 1em; }
+	.religiowikicustomizer-stat-value { font-size: 1.6em; }
+	.religiowikicustomizer-featured,
+	.religiowikicustomizer-categories { padding: 0.9em; }
+	.religiowikicustomizer-search-block form { flex-wrap: wrap; }
+	.religiowikicustomizer-search-block input[type="text"] { font-size: 16px; }
+}
