@@ -43,5 +43,38 @@
 			}
 		],
 		"pk": [ "rwcs_id" ]
+	},
+	{
+		"name": "rwc_page_views",
+		"comment": "Contagem diária de visualizações por página (Fase 9 — dashboard de Artigos). Uma linha por (página, dia).",
+		"columns": [
+			{
+				"name": "rwcpv_page",
+				"comment": "page_id da página visualizada.",
+				"type": "integer",
+				"options": { "notnull": true, "unsigned": true }
+			},
+			{
+				"name": "rwcpv_day",
+				"comment": "Dia da visualização como inteiro AAAAMMDD (ex.: 20260718).",
+				"type": "integer",
+				"options": { "notnull": true, "unsigned": true }
+			},
+			{
+				"name": "rwcpv_views",
+				"comment": "Número de visualizações da página nesse dia.",
+				"type": "integer",
+				"options": { "notnull": true, "unsigned": true, "default": 0 }
+			}
+		],
+		"indexes": [
+			{
+				"name": "rwcpv_day",
+				"comment": "Somatório de visitas do site inteiro por dia.",
+				"columns": [ "rwcpv_day" ],
+				"unique": false
+			}
+		],
+		"pk": [ "rwcpv_page", "rwcpv_day" ]
 	}
 ]
