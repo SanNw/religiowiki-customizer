@@ -3,6 +3,32 @@
 	flex-wrap: wrap;
 	gap: 4px;
 	margin-bottom: 6px;
+	/* Fica na base da pilha de empilhamento: qualquer diálogo modal (ex.: a
+	   janela "Inserir arquivo" do WikiEditor) precisa aparecer ACIMA da barra,
+	   nunca ao contrário. */
+	position: relative;
+	z-index: 0;
+}
+
+/*
+ * Correção do bug de upload: a janela "Inserir arquivo" do WikiEditor é um
+ * diálogo modal OOUI que, sem um fundo escurecido, deixava a barra de edição
+ * (e o resto da página) aparecerem em volta/por cima — dava a impressão de a
+ * barra estar sobreposta à área de upload. Força o diálogo pra cima de tudo e
+ * adiciona um fundo escuro (backdrop) próprio, cobrindo a tela inteira.
+ */
+.oo-ui-windowManager-modal > .oo-ui-dialog {
+	z-index: 1000;
+}
+.oo-ui-windowManager-modal > .oo-ui-dialog::before {
+	content: "";
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: rgba( 0, 0, 0, 0.4 );
+	z-index: -1;
 }
 
 #rwc-editor-toolbar button {
