@@ -52,3 +52,48 @@
 	padding: 0.75em 1em;
 	margin-bottom: 1em;
 }
+
+/* O formulário nunca deve ultrapassar a largura da tela. */
+#religiowikicustomizer-form {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+/* As 7 abas em flex sem quebra estouravam a largura no celular (não dava pra
+   alcançar "homepage"/salvar). Deixa as abas quebrarem em linha, o formulário
+   fluido e os alvos de toque grandes. */
+@media ( max-width: 700px ) {
+	.religiowikicustomizer-tabs {
+		flex-wrap: wrap;
+		gap: 6px;
+		border-bottom: none;
+	}
+	.religiowikicustomizer-tab {
+		flex: 1 1 40%;
+		text-align: center;
+		border: 1px solid #c8ccd1;
+		border-radius: 4px;
+		padding: 10px 12px;
+	}
+	.religiowikicustomizer-tab-active {
+		border-color: var( --rw-link, #92400E );
+	}
+	/* Campos e editores ocupam a largura toda, sem overflow horizontal. */
+	#religiowikicustomizer-form .oo-ui-fieldLayout,
+	#religiowikicustomizer-form .oo-ui-inputWidget,
+	#religiowikicustomizer-form .oo-ui-textInputWidget,
+	#religiowikicustomizer-form input[type="text"],
+	#religiowikicustomizer-form textarea {
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+	/* font-size >= 16px evita o zoom automático do iOS ao focar o campo. */
+	#religiowikicustomizer-form input[type="text"],
+	.religiowikicustomizer-code-editor textarea {
+		font-size: 16px;
+	}
+	/* Botões do OOUI (Salvar etc.) ocupam a largura toda e ficam clicáveis. */
+	#religiowikicustomizer-form .oo-ui-buttonElement-button {
+		min-height: 44px;
+	}
+}
