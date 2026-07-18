@@ -21,6 +21,9 @@
 	"SpecialPages": {
 		"ReligiowikiCustomizer": {
 			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\SpecialPages\\SpecialReligiowikiCustomizer"
+		},
+		"Artigos": {
+			"class": "MediaWiki\\Extension\\ReligiowikiCustomizer\\SpecialPages\\SpecialArtigos"
 		}
 	},
 	"HookHandlers": {
@@ -84,6 +87,12 @@
 		"ext.religiowikiCustomizer.editorToolbar": {
 			"styles": [ "resources/css/editor-toolbar.css" ],
 			"scripts": [ "resources/js/editor-toolbar.js" ],
+			"targets": [ "desktop", "mobile" ]
+		},
+		"ext.religiowikiCustomizer.artigos": {
+			"styles": [ "resources/css/special-artigos.css" ],
+			"scripts": [ "resources/js/special-artigos.js" ],
+			"messages": [ "religiowikicustomizer-artigos-delete-jsconfirm" ],
 			"targets": [ "desktop", "mobile" ]
 		}
 	},

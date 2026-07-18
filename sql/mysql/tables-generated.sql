@@ -14,3 +14,13 @@ CREATE TABLE /*_*/religiowiki_customizer_settings (
 ) /*$wgDBTableOptions*/;
 
 CREATE UNIQUE INDEX /*i*/rwcs_key ON /*_*/religiowiki_customizer_settings (rwcs_key);
+
+
+CREATE TABLE /*_*/rwc_page_views (
+  rwcpv_page INT UNSIGNED NOT NULL,
+  rwcpv_day INT UNSIGNED NOT NULL,
+  rwcpv_views INT UNSIGNED DEFAULT 0 NOT NULL,
+  PRIMARY KEY(rwcpv_page, rwcpv_day)
+) /*$wgDBTableOptions*/;
+
+CREATE INDEX /*i*/rwcpv_day ON /*_*/rwc_page_views (rwcpv_day);

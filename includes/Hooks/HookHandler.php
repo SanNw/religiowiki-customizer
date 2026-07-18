@@ -16,12 +16,14 @@ use MediaWiki\Extension\ReligiowikiCustomizer\SEO\BreadcrumbBuilder;
 use MediaWiki\Extension\ReligiowikiCustomizer\SEO\SeoInjector;
 use MediaWiki\Extension\ReligiowikiCustomizer\SEO\SeoParserFunction;
 use MediaWiki\Extension\ReligiowikiCustomizer\Services\HomepageConfigStore;
+use MediaWiki\Extension\ReligiowikiCustomizer\Services\PageViewStore;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\AuthorWidget;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\BookWidget;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\InfoboxWidget;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\ReligionWidget;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\SchoolWidget;
 use MediaWiki\Extension\ReligiowikiCustomizer\Widgets\TimelineWidget;
+use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageBeforeHTMLHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
@@ -65,6 +67,49 @@ class HookHandler implements
 
 		SeoInjector::inject( $out );
 		PerformanceInjector::inject( $out );
+
+		$this->maybeRecordView( $out );
+	}
+
+	/**
+	 * Contabiliza uma visualização (Fase 9) quando a página sendo exibida é um
+	 * artigo publicado (namespace principal) ou um rascunho (namespace
+	 * "Rascunho", se definido no LocalSettings) que EXISTE, e a requisição é
+	 * uma leitura normal (action=view, método GET). A gravação vai para um
+	 * DeferredUpdate para não atrasar a resposta nem escrever no meio da
+	 * renderização.
+	 *
+	 * @param \OutputPage $out
+	 */
+	private function maybeRecordView( $out ): void {
+		$title = $out->getTitle();
+		if ( !$title || !$title->exists() ) {
+			return;
+		}
+
+		$ns = $title->getNamespace();
+		$isDraft = defined( 'NS_RASCUNHO' ) && $ns === NS_RASCUNHO;
+		if ( $ns !== NS_MAIN && !$isDraft ) {
+			return;
+		}
+
+		$request = $out->getRequest();
+		if ( $request->wasPosted() ) {
+			return;
+		}
+		// 'view' é o default; só contamos leituras, não history/edit/raw etc.
+		if ( $request->getVal( 'action', 'view' ) !== 'view' ) {
+			return;
+		}
+
+		$pageId = $title->getArticleID();
+		if ( $pageId <= 0 ) {
+			return;
+		}
+
+		DeferredUpdates::addCallableUpdate( static function () use ( $pageId ): void {
+			PageViewStore::newFromGlobalState()->recordView( $pageId );
+		} );
 	}
 
 	/**
@@ -142,7 +187,10 @@ class HookHandler implements
 	}
 
 	/**
-	 * Registra a tabela religiowiki_customizer_settings em `update.php`.
+	 * Registra as tabelas da extensão em `update.php`:
+	 *  - religiowiki_customizer_settings (Fase 1+): storage chave-valor.
+	 *  - rwc_page_views (Fase 9): contagem diária de visualizações por página,
+	 *    consumida pelo dashboard Special:Artigos.
 	 *
 	 * @inheritDoc
 	 */
@@ -150,6 +198,10 @@ class HookHandler implements
 		$dir = dirname( __DIR__, 2 ) . '/sql';
 		$updater->addExtensionTable(
 			'religiowiki_customizer_settings',
+			$dir . '/mysql/tables-generated.sql'
+		);
+		$updater->addExtensionTable(
+			'rwc_page_views',
 			$dir . '/mysql/tables-generated.sql'
 		);
 	}

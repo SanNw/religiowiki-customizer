@@ -1,0 +1,321 @@
+/*
+ * Special:Artigos (Fase 9) — dashboard de artigos. Usa os tokens --rw-* do
+ * tema (disponíveis globalmente via ext.religiowikiCustomizer.theme) para
+ * seguir a identidade visual do projeto, inclusive nos gráficos SVG.
+ */
+
+/* ---------- Abas ---------- */
+.rw-artigos-tabs {
+	display: flex;
+	gap: 4px;
+	border-bottom: 1px solid var( --rw-border, #E2D5B8 );
+	margin: 1.5em 0 1em;
+}
+.rw-artigos-tab {
+	padding: 8px 16px;
+	text-decoration: none;
+	border: 1px solid transparent;
+	border-bottom: none;
+	border-radius: 4px 4px 0 0;
+}
+.rw-artigos-tab-active {
+	border-color: var( --rw-border, #E2D5B8 );
+	background: var( --rw-surface, #FFFDF7 );
+	font-weight: bold;
+}
+
+/* ---------- Tabela de artigos ---------- */
+.rw-artigos-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1.5em;
+}
+.rw-artigos-table th,
+.rw-artigos-table td {
+	text-align: left;
+	padding: 10px 12px;
+	border-bottom: 1px solid var( --rw-border, #E2D5B8 );
+	vertical-align: middle;
+}
+.rw-artigos-table thead th {
+	font-size: 0.8em;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var( --rw-text-muted, #5C5142 );
+	border-bottom: 2px solid var( --rw-border, #E2D5B8 );
+}
+.rw-artigos-table tbody tr:hover {
+	background: var( --rw-surface, #FFFDF7 );
+}
+.rw-artigos-col-views,
+.rw-artigos-col-actions {
+	white-space: nowrap;
+	width: 1%;
+}
+.rw-artigos-col-views {
+	text-align: right;
+	font-variant-numeric: tabular-nums;
+}
+.rw-artigos-views {
+	font-weight: 600;
+}
+
+/* ---------- Botões de ação ---------- */
+.rw-artigos-actions {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	justify-content: flex-end;
+}
+.rw-artigos-publishform {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+.rw-artigos-act {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 4px;
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	background: var( --rw-surface, #FFFDF7 );
+	text-decoration: none;
+	font-size: 1em;
+	line-height: 1;
+	cursor: pointer;
+}
+.rw-artigos-act:hover {
+	background: var( --rw-background, #FBF3E1 );
+}
+.rw-artigos-act-delete:hover {
+	border-color: #b32424;
+	background: #fee7e6;
+}
+.rw-artigos-act-publish {
+	color: var( --rw-link, #92400E );
+	border-color: var( --rw-link, #92400E );
+}
+
+/* ---------- Mensagens ---------- */
+.rw-artigos-msg {
+	border-radius: 4px;
+	padding: 0.75em 1em;
+	margin: 1em 0;
+}
+.rw-artigos-msg-success {
+	background: #e5f5e5;
+	border: 1px solid #6bb36b;
+}
+.rw-artigos-msg-error {
+	background: #fee7e6;
+	border: 1px solid #d9534f;
+}
+.rw-artigos-msg-empty {
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	color: var( --rw-text-muted, #5C5142 );
+}
+.rw-artigos-back {
+	margin: 0.5em 0 1em;
+}
+
+/* ---------- Detalhe ---------- */
+.rw-artigos-detail-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1em;
+	border-bottom: 1px solid var( --rw-border, #E2D5B8 );
+	padding-bottom: 0.75em;
+	margin-bottom: 1em;
+}
+.rw-artigos-detail-title {
+	margin: 0;
+	border: 0;
+}
+.rw-artigos-counter {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	line-height: 1.1;
+}
+.rw-artigos-counter-num {
+	font-size: 2.2em;
+	font-weight: 700;
+	color: var( --rw-link, #92400E );
+	font-variant-numeric: tabular-nums;
+}
+.rw-artigos-counter-label {
+	font-size: 0.8em;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: var( --rw-text-muted, #5C5142 );
+}
+.rw-artigos-chartblock,
+.rw-artigos-sitechart {
+	margin: 1.5em 0;
+}
+.rw-artigos-chartblock h3,
+.rw-artigos-sitechart h2 {
+	font-size: 1.05em;
+	margin: 0 0 0.5em;
+}
+
+/* ---------- Confirmação de exclusão ---------- */
+.rw-artigos-delete-warning {
+	background: #fee7e6;
+	border: 1px solid #d9534f;
+	border-radius: 4px;
+	padding: 0.75em 1em;
+	margin-bottom: 1em;
+}
+.rw-artigos-delete-form {
+	max-width: 520px;
+}
+.rw-artigos-confirm-label {
+	display: block;
+	margin-bottom: 0.4em;
+}
+.rw-artigos-confirm-input {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 10px;
+	font-size: 16px;
+	border: 1px solid var( --rw-border, #E2D5B8 );
+	border-radius: 4px;
+	margin-bottom: 1em;
+}
+.rw-artigos-delete-buttons {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+}
+.rw-artigos-delete-submit {
+	background: #d9534f;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 10px 18px;
+	font-size: 1em;
+	cursor: pointer;
+	min-height: 44px;
+}
+.rw-artigos-delete-submit[disabled] {
+	background: #d9a3a1;
+	cursor: not-allowed;
+}
+.rw-artigos-cancel {
+	text-decoration: none;
+}
+
+/* ---------- Gráficos SVG (identidade --rw-*) ---------- */
+.rw-chart-wrap {
+	width: 100%;
+	overflow-x: auto;
+}
+.rw-chart {
+	width: 100%;
+	height: auto;
+	max-width: 720px;
+	display: block;
+}
+.rw-chart-line {
+	fill: none;
+	stroke: var( --rw-link, #92400E );
+	stroke-width: 2;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+.rw-chart-area {
+	fill: var( --rw-link, #92400E );
+	opacity: 0.12;
+	stroke: none;
+}
+.rw-chart-point {
+	fill: var( --rw-link, #92400E );
+}
+.rw-chart-bar {
+	fill: var( --rw-link, #92400E );
+}
+.rw-chart-grid {
+	stroke: var( --rw-border, #E2D5B8 );
+	stroke-width: 1;
+}
+.rw-chart-xlabel,
+.rw-chart-ylabel,
+.rw-chart-barvalue {
+	font-size: 11px;
+	fill: var( --rw-text-muted, #5C5142 );
+	font-family: sans-serif;
+}
+.rw-chart-empty {
+	color: var( --rw-text-muted, #5C5142 );
+	font-style: italic;
+	padding: 1.2em;
+	background: var( --rw-surface, #FFFDF7 );
+	border: 1px dashed var( --rw-border, #E2D5B8 );
+	border-radius: 4px;
+	text-align: center;
+}
+
+/* ---------- Mobile ---------- */
+@media ( max-width: 640px ) {
+	/* Tabela vira "cartões" empilhados: cada linha um bloco, com rótulos. */
+	.rw-artigos-table thead {
+		display: none;
+	}
+	.rw-artigos-table,
+	.rw-artigos-table tbody,
+	.rw-artigos-table tr,
+	.rw-artigos-table td {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.rw-artigos-table tr {
+		border: 1px solid var( --rw-border, #E2D5B8 );
+		border-radius: 6px;
+		margin-bottom: 10px;
+		padding: 4px 0;
+	}
+	.rw-artigos-table td {
+		border-bottom: none;
+		padding: 6px 12px;
+	}
+	.rw-artigos-table td[data-label]::before {
+		content: attr( data-label ) ": ";
+		font-size: 0.75em;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		color: var( --rw-text-muted, #5C5142 );
+		display: block;
+	}
+	.rw-artigos-col-views {
+		text-align: left;
+	}
+	.rw-artigos-actions {
+		justify-content: flex-start;
+	}
+	.rw-artigos-act {
+		width: 42px;
+		height: 42px;
+		font-size: 1.15em;
+	}
+	.rw-artigos-tabs {
+		flex-wrap: wrap;
+	}
+	.rw-artigos-tab {
+		flex: 1 1 40%;
+		text-align: center;
+	}
+	.rw-artigos-detail-head {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.rw-artigos-counter {
+		align-items: flex-start;
+	}
+}
