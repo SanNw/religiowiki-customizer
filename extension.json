@@ -89,6 +89,11 @@
 			"scripts": [ "resources/js/editor-toolbar.js" ],
 			"targets": [ "desktop", "mobile" ]
 		},
+		"ext.religiowikiCustomizer.veEditorSidebar": {
+			"styles": [ "resources/css/ve-editor-sidebar.css" ],
+			"scripts": [ "resources/js/ve-editor-sidebar.js" ],
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.religiowikiCustomizer.artigos": {
 			"styles": [ "resources/css/special-artigos.css" ],
 			"scripts": [ "resources/js/special-artigos.js" ],
