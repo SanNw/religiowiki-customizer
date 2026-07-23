@@ -28,6 +28,7 @@ use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageBeforeHTMLHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
+use MediaWiki\MediaWikiServices;
 
 class HookHandler implements
 	BeforePageDisplayHook,
@@ -72,7 +73,7 @@ class HookHandler implements
 		// automonta quando o VE realmente ativa (mw.hook
 		// 've.activationComplete'), então carregar aqui só garante que o
 		// listener do hook já está pronto a tempo.
-		$userOptionsLookup = MediaWiki\MediaWikiServices::getInstance()->getUserOptionsLookup();
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
 		if ( $userOptionsLookup->getBoolOption( $out->getUser(), 'visualeditor-enable' ) ) {
 			$out->addModules( 'ext.religiowikiCustomizer.veEditorSidebar' );
 		}
