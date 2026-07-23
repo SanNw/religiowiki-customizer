@@ -1,0 +1,116 @@
+/*
+ * Barra lateral sanfona pro VisualEditor (Fase 8) -- espelha os 4 grupos do
+ * editor-toolbar.css/js (Formatação, Componentes, Ajuda, Inserir imagens),
+ * mas dentro da lateral esquerda (#mw-panel), sticky durante o scroll, em vez
+ * da barra horizontal usada no editor de código-fonte. Só é montada quando o
+ * VisualEditor está ativo (ver ve-editor-sidebar.js) -- nunca aparece fora
+ * do modo de edição visual.
+ */
+#rwc-ve-sidebar {
+	position: sticky;
+	top: 20px;
+	max-height: calc(100vh - 40px);
+	overflow-y: auto;
+	margin-top: 8px;
+}
+
+#rwc-ve-sidebar .rwc-ve-group {
+	border-top: 1px solid var(--rw-border, #e2d5b8);
+}
+#rwc-ve-sidebar .rwc-ve-group:first-child {
+	border-top: none;
+}
+
+#rwc-ve-sidebar .rwc-ve-group-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	background: none;
+	border: none;
+	padding: 8px 2px;
+	margin: 0;
+	font: inherit;
+	font-weight: 700;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: var(--rw-text, #241c15);
+	cursor: pointer;
+	text-align: left;
+}
+#rwc-ve-sidebar .rwc-ve-group-toggle:hover {
+	color: var(--rw-link, #92400e);
+}
+#rwc-ve-sidebar .rwc-ve-group-chevron {
+	transition: transform 0.15s ease;
+	font-size: 0.7rem;
+	color: var(--rw-text-muted, #5c5142);
+	flex: 0 0 auto;
+	margin-left: 6px;
+}
+#rwc-ve-sidebar .rwc-ve-group-toggle[aria-expanded="true"] .rwc-ve-group-chevron {
+	transform: rotate(180deg);
+}
+
+#rwc-ve-sidebar .rwc-ve-group-body {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 0 0 10px;
+}
+#rwc-ve-sidebar .rwc-ve-group-body[hidden] { display: none; }
+
+#rwc-ve-sidebar .rwc-ve-btn {
+	display: block;
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	padding: 5px 8px;
+	font: inherit;
+	font-size: 0.85rem;
+	color: var(--rw-text, #241c15);
+	cursor: pointer;
+}
+#rwc-ve-sidebar .rwc-ve-btn:hover {
+	background: var(--rw-bg-elevated, #fffdf7);
+	border-color: var(--rw-border, #e2d5b8);
+	color: var(--rw-link, #92400e);
+}
+#rwc-ve-sidebar .rwc-ve-btn:disabled {
+	opacity: 0.5;
+	cursor: progress;
+}
+
+/* Guia rápido (grupo "Ajuda") -- mesma tabela do editor de código-fonte,
+   só que empilhada (a coluna é estreita demais pra tabela lado a lado). */
+#rwc-ve-sidebar .rwc-ve-help-item {
+	padding: 6px 8px;
+	font-size: 0.78rem;
+	line-height: 1.4;
+	border-bottom: 1px dashed var(--rw-border, #e2d5b8);
+}
+#rwc-ve-sidebar .rwc-ve-help-item:last-child { border-bottom: none; }
+#rwc-ve-sidebar .rwc-ve-help-item code {
+	display: block;
+	background: var(--rw-bg-elevated, #fffdf7);
+	padding: 1px 4px;
+	border-radius: 2px;
+	margin-bottom: 2px;
+	word-break: break-word;
+}
+#rwc-ve-sidebar .rwc-ve-help-item span {
+	color: var(--rw-text-muted, #5c5142);
+}
+
+@media (max-width: 851px) {
+	/* Na gaveta mobile a lateral já é um painel deslizante próprio, sem
+	   scroll independente do resto -- sticky "gruda" de forma estranha
+	   ali dentro. Mantém a sanfona, só desliga o sticky. */
+	#rwc-ve-sidebar {
+		position: static;
+		max-height: none;
+	}
+}

@@ -28,6 +28,7 @@ use MediaWiki\Hook\BeforePageDisplayHook;
 use MediaWiki\Hook\OutputPageBeforeHTMLHook;
 use MediaWiki\Hook\ParserFirstCallInitHook;
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
+use MediaWiki\MediaWikiServices;
 
 class HookHandler implements
 	BeforePageDisplayHook,
@@ -64,6 +65,18 @@ class HookHandler implements
 		] );
 
 		$out->addBodyClasses( 'rwc-skin-' . $skin->getSkinName() );
+
+		// rw-ve-optin: a barra lateral sanfona (Formatação/Componentes/Ajuda/
+		// Inserir imagens) do VisualEditor só faz sentido carregar pra quem
+		// tem a preferência "visualeditor-enable" ligada -- o padrão do site
+		// é desligado, ver LocalSettings-snippet.php. O módulo em si só se
+		// automonta quando o VE realmente ativa (mw.hook
+		// 've.activationComplete'), então carregar aqui só garante que o
+		// listener do hook já está pronto a tempo.
+		$userOptionsLookup = MediaWikiServices::getInstance()->getUserOptionsLookup();
+		if ( $userOptionsLookup->getBoolOption( $out->getUser(), 'visualeditor-enable' ) ) {
+			$out->addModules( 'ext.religiowikiCustomizer.veEditorSidebar' );
+		}
 
 		SeoInjector::inject( $out );
 		PerformanceInjector::inject( $out );
